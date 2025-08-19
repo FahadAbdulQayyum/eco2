@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 
 // Import build timestamp from generated file
 // This will be automatically updated during each build
@@ -81,7 +82,12 @@ const BuildTimer: React.FC = () => {
             }}
             title="Close timer"
           >
-            ×
+            <Image
+              src="/icons/times.svg"
+              height={13}
+              width={13}
+              alt="close timer"
+            />
           </div>
           <span style={{ fontWeight: 600 }}>Live Since:</span>
           <div style={{ marginTop: 4 }}>
