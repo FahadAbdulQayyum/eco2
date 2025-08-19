@@ -73,7 +73,7 @@ const BuildTimer: React.FC = () => {
               cursor: "pointer",
               fontSize: 12,
               fontWeight: "bold",
-              color: "#666",
+              color: "red",
               border: "1px solid #ddd"
             }}
             onClick={(e) => {
