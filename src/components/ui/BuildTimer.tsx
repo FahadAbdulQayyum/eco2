@@ -1,10 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-// Simulate build time as a constant for now (replace with real build time if available)
-const BUILD_TIMESTAMP = typeof window !== "undefined" && window.__BUILD_TIMESTAMP__
-  ? window.__BUILD_TIMESTAMP__
-  : (typeof process !== "undefined" && process.env.NEXT_PUBLIC_BUILD_TIMESTAMP)
+// Use build time from env or fallback to now
+const BUILD_TIMESTAMP =
+  typeof process !== "undefined" && process.env.NEXT_PUBLIC_BUILD_TIMESTAMP
     ? parseInt(process.env.NEXT_PUBLIC_BUILD_TIMESTAMP)
     : Date.now();
 
