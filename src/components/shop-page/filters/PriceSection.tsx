@@ -15,7 +15,7 @@ const PriceSection = () => {
   const priceRange = useAppSelector((state) => state.shop.filters.priceRange);
 
   const handlePriceChange = (value: number[]) => {
-    dispatch(setPriceRange([value[0], value[1]]);
+    dispatch(setPriceRange([value[0], value[1]]));
   };
 
   return (
