@@ -151,9 +151,9 @@ const TopNavbar = () => {
           <CartBtn />
           
           {/* Debug info - remove this later */}
-          <div className="mr-2 text-xs text-gray-500">
+          {isAuthenticated && <div className="mr-2 text-xs text-gray-500">
             Auth: {isAuthenticated ? 'Yes' : 'No'} | User: {currentUser?.name || 'None'}
-          </div>
+          </div>}
           
           {/* User section - shows different content based on auth status */}
           {isAuthenticated && currentUser ? (
