@@ -6,6 +6,7 @@ import TopNavbar from "@/components/layout/Navbar/TopNavbar";
 import Footer from "@/components/layout/Footer";
 import HolyLoader from "holy-loader";
 import Providers from "./providers";
+import BuildTimer from "@/components/ui/BuildTimer";
 
 export const metadata: Metadata = {
   title: "Tahir Zai",
@@ -31,6 +32,7 @@ export default function RootLayout({
           {children}
         </Providers>
         <Footer />
+        <BuildTimer />
       </body>
     </html>
   );
