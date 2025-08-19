@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Accordion,
@@ -5,34 +6,46 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Link from "next/link";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
+import { setDressStyle } from "@/lib/features/shop/shopSlice";
 
 type DressStyle = {
   title: string;
-  slug: string;
+  value: string;
 };
 
 const dressStylesData: DressStyle[] = [
   {
     title: "Casual",
-    slug: "/shop?style=casual",
+    value: "casual",
   },
   {
     title: "Formal",
-    slug: "/shop?style=formal",
+    value: "formal",
   },
   {
     title: "Party",
-    slug: "/shop?style=party",
+    value: "party",
   },
   {
     title: "Gym",
-    slug: "/shop?style=gym",
+    value: "gym",
   },
 ];
 
 const DressStyleSection = () => {
+  const dispatch = useAppDispatch();
+  const selectedDressStyle = useAppSelector((state) => state.shop.filters.dressStyle);
+
+  const handleDressStyleClick = (styleValue: string) => {
+    if (selectedDressStyle === styleValue) {
+      dispatch(setDressStyle(null)); // Deselect if already selected
+    } else {
+      dispatch(setDressStyle(styleValue));
+    }
+  };
+
   return (
     <Accordion type="single" collapsible defaultValue="filter-style">
       <AccordionItem value="filter-style" className="border-none">
@@ -42,13 +55,17 @@ const DressStyleSection = () => {
         <AccordionContent className="pt-4 pb-0">
           <div className="flex flex-col text-black/60 space-y-0.5">
             {dressStylesData.map((dStyle, idx) => (
-              <Link
+              <button
                 key={idx}
-                href={dStyle.slug}
-                className="flex items-center justify-between py-2"
+                onClick={() => handleDressStyleClick(dStyle.value)}
+                className={`flex items-center justify-between py-2 text-left w-full transition-colors ${
+                  selectedDressStyle === dStyle.value 
+                    ? "text-black font-medium" 
+                    : "hover:text-black/80"
+                }`}
               >
                 {dStyle.title} <MdKeyboardArrowRight />
-              </Link>
+              </button>
             ))}
           </div>
         </AccordionContent>

@@ -4,18 +4,20 @@ import storage from "@/components/storage";
 import productsReducer from "./features/products/productsSlice";
 import cartsReducer from "./features/carts/cartsSlice";
 import authReducer from "./features/auth/authSlice";
+import shopReducer from "./features/shop/shopSlice";
 
 const persistConfig = {
   key: "root",
   storage,
   version: 1,
-  whitelist: ["carts", "auth"],
+  whitelist: ["carts", "auth", "shop"],
 };
 
 const rootReducer = combineReducers({
   products: productsReducer,
   carts: cartsReducer,
   auth: authReducer,
+  shop: shopReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

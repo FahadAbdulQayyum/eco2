@@ -1,5 +1,5 @@
+"use client";
 import BreadcrumbShop from "@/components/shop-page/BreadcrumbShop";
-
 import {
   Select,
   SelectContent,
@@ -21,8 +21,54 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
+import { setFilteredProducts } from "@/lib/features/shop/shopSlice";
+import { filterProducts } from "@/lib/utils/filterProducts";
+import { useEffect, useMemo } from "react";
 
 export default function ShopPage() {
+  const dispatch = useAppDispatch();
+  const filters = useAppSelector((state) => state.shop.filters);
+  const filteredProducts = useAppSelector((state) => state.shop.filteredProducts);
+  const isFiltered = useAppSelector((state) => state.shop.isFiltered);
+
+  // Combine all product data
+  const allProducts = useMemo(() => [
+    ...relatedProductData.slice(1, 4),
+    ...newArrivalsData.slice(1, 4),
+    ...topSellingData.slice(1, 4),
+  ], []);
+
+  // Apply filters whenever filters change
+  useEffect(() => {
+    const hasActiveFilters = Object.values(filters).some(value => 
+      Array.isArray(value) ? value.length > 0 : value !== null
+    );
+
+    if (hasActiveFilters) {
+      // Add mock category, colors, and sizes to products for demo purposes
+      const productsWithAttributes = allProducts.map((product, index) => ({
+        ...product,
+        category: index < 4 ? "t-shirts" : index < 8 ? "shirts" : "jeans",
+        colors: index % 2 === 0 ? ["red", "blue"] : ["green", "black"],
+        sizes: index % 3 === 0 ? ["Small", "Medium"] : ["Large", "X-Large"],
+        dressStyle: index < 6 ? "casual" : "formal",
+      }));
+
+      const filtered = filterProducts(productsWithAttributes, filters);
+      dispatch(setFilteredProducts(filtered));
+    } else {
+      dispatch(setFilteredProducts([]));
+    }
+  }, [filters, allProducts, dispatch]);
+
+  // Use filtered products if available, otherwise use all products
+  const displayProducts = isFiltered && filteredProducts.length > 0 
+    ? filteredProducts 
+    : allProducts;
+
+  const productCount = displayProducts.length;
+
   return (
     <main className="pb-20">
       <div className="max-w-frame mx-auto px-4 xl:px-0">
@@ -44,7 +90,10 @@ export default function ShopPage() {
               </div>
               <div className="flex flex-col sm:items-center sm:flex-row">
                 <span className="text-sm md:text-base text-black/60 mr-3">
-                  Showing 1-10 of 100 Products
+                  Showing 1-{productCount} of {productCount} Products
+                  {isFiltered && filteredProducts.length > 0 && (
+                    <span className="text-blue-600 font-medium"> (Filtered)</span>
+                  )}
                 </span>
                 <div className="flex items-center">
                   Sort by:{" "}
@@ -61,75 +110,86 @@ export default function ShopPage() {
                 </div>
               </div>
             </div>
-            <div className="w-full grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
-              {[
-                ...relatedProductData.slice(1, 4),
-                ...newArrivalsData.slice(1, 4),
-                ...topSellingData.slice(1, 4),
-              ].map((product) => (
-                <ProductCard key={product.id} data={product} />
-              ))}
-            </div>
-            <hr className="border-t-black/10" />
-            <Pagination className="justify-between">
-              <PaginationPrevious href="#" className="border border-black/10" />
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    className="text-black/50 font-medium text-sm"
-                    isActive
-                  >
-                    1
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    className="text-black/50 font-medium text-sm"
-                  >
-                    2
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem className="hidden lg:block">
-                  <PaginationLink
-                    href="#"
-                    className="text-black/50 font-medium text-sm"
-                  >
-                    3
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis className="text-black/50 font-medium text-sm" />
-                </PaginationItem>
-                <PaginationItem className="hidden lg:block">
-                  <PaginationLink
-                    href="#"
-                    className="text-black/50 font-medium text-sm"
-                  >
-                    8
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem className="hidden sm:block">
-                  <PaginationLink
-                    href="#"
-                    className="text-black/50 font-medium text-sm"
-                  >
-                    9
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    className="text-black/50 font-medium text-sm"
-                  >
-                    10
-                  </PaginationLink>
-                </PaginationItem>
-              </PaginationContent>
+            
+            {/* Products Grid */}
+            {displayProducts.length > 0 ? (
+              <div className="w-full grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
+                {displayProducts.map((product) => (
+                  <ProductCard key={product.id} data={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20">
+                <div className="text-gray-400 text-6xl mb-4">🔍</div>
+                <h3 className="text-xl font-medium text-gray-600 mb-2">No products found</h3>
+                <p className="text-gray-500">Try adjusting your filters or clearing some selections.</p>
+              </div>
+            )}
 
-              <PaginationNext href="#" className="border border-black/10" />
-            </Pagination>
+            {/* Pagination - only show if there are products */}
+            {displayProducts.length > 0 && (
+              <>
+                <hr className="border-t-black/10" />
+                <Pagination className="justify-between">
+                  <PaginationPrevious href="#" className="border border-black/10" />
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationLink
+                        href="#"
+                        className="text-black/50 font-medium text-sm"
+                        isActive
+                      >
+                        1
+                      </PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationLink
+                        href="#"
+                        className="text-black/50 font-medium text-sm"
+                      >
+                        2
+                      </PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem className="hidden lg:block">
+                      <PaginationLink
+                        href="#"
+                        className="text-black/50 font-medium text-sm"
+                      >
+                        3
+                      </PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationEllipsis className="text-black/50 font-medium text-sm" />
+                    </PaginationItem>
+                    <PaginationItem className="hidden lg:block">
+                      <PaginationLink
+                        href="#"
+                        className="text-black/50 font-medium text-sm"
+                      >
+                        8
+                      </PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem className="hidden sm:block">
+                      <PaginationLink
+                        href="#"
+                        className="text-black/50 font-medium text-sm"
+                      >
+                        9
+                      </PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationLink
+                        href="#"
+                        className="text-black/50 font-medium text-sm"
+                      >
+                        10
+                      </PaginationLink>
+                    </PaginationItem>
+                  </PaginationContent>
+                  <PaginationNext href="#" className="border border-black/10" />
+                </Pagination>
+              </>
+            )}
           </div>
         </div>
       </div>
