@@ -3,15 +3,17 @@ import InputGroup from "@/components/ui/input-group";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
+import { useToast } from "@/components/ui/Toast";
 
 export default function SignUpPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const toast = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Add sign-up logic
+    toast.showToast("Sign up failed: invalid or already used credentials.", "error");
   };
 
   return (

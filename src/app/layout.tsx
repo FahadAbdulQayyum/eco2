@@ -7,6 +7,7 @@ import Footer from "@/components/layout/Footer";
 import HolyLoader from "holy-loader";
 import Providers from "./providers";
 import BuildTimer from "@/components/ui/BuildTimer";
+import { ToastProvider } from "@/components/ui/Toast";
 
 export const metadata: Metadata = {
   title: "Tahir Zai",
@@ -25,14 +26,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={satoshi.className}>
-        <HolyLoader color="#868686" />
-        <TopBanner />
-        <Providers>
-          <TopNavbar />
-          {children}
-        </Providers>
-        <Footer />
-        <BuildTimer />
+        <ToastProvider>
+          <HolyLoader color="#868686" />
+          <TopBanner />
+          <Providers>
+            <TopNavbar />
+            {children}
+          </Providers>
+          <Footer />
+          <BuildTimer />
+        </ToastProvider>
       </body>
     </html>
   );
