@@ -12,7 +12,7 @@ const InputGroup = ({ className, children }: InputGroupProps) => {
   return (
     <div
       className={cn(
-        "input-group focus-within:shadow-lg pl-4 transition-all relative flex items-center w-full rounded-full overflow-hidden",
+        "input-group focus-within:shadow-lg pl-4 transition-all relative flex items-center w-full rounded-full overflow-hidden border border-input bg-white",
         className ?? ""
       )}
     >
@@ -28,7 +28,7 @@ const Input = React.forwardRef<HTMLInputElement, InputTextProps>(
     return (
       <input
         className={cn(
-          "input-control w-full py-3 pr-4 outline-none placeholder:font-normal placeholder:text-sm",
+          "input-control w-full py-3 pr-4 outline-none placeholder:font-normal placeholder:text-sm bg-white",
           className ?? ""
         )}
         autoComplete="off"
