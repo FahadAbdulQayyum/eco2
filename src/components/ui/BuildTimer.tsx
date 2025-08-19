@@ -1,10 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-const BUILD_TIMESTAMP =
-  typeof process !== "undefined" && process.env.NEXT_PUBLIC_BUILD_TIMESTAMP
-    ? parseInt(process.env.NEXT_PUBLIC_BUILD_TIMESTAMP)
-    : Date.now();
+// Import build timestamp from generated file
+// This will be automatically updated during each build
+import { BUILD_TIMESTAMP } from "@/lib/buildInfo";
 
 function getTimeSinceBuild(buildTime: number) {
   const now = Date.now();
@@ -19,8 +18,8 @@ function getTimeSinceBuild(buildTime: number) {
 }
 
 const BuildTimer: React.FC = () => {
-  const [time, setTime] = useState(getTimeSinceBuild(BUILD_TIMESTAMP));
   const [open, setOpen] = useState(false);
+  const [time, setTime] = useState(getTimeSinceBuild(BUILD_TIMESTAMP));
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -54,11 +53,11 @@ const BuildTimer: React.FC = () => {
         overflow: "hidden",
       }}
       onClick={() => setOpen((v) => !v)}
-      title={open ? "Hide build timer" : "Show build timer"}
+      title={open ? "Hide live timer" : "Show live timer"}
     >
       {open ? (
         <div style={{ width: "100%", textAlign: "center" }}>
-          <span style={{ fontWeight: 600 }}>Build Age:</span>
+          <span style={{ fontWeight: 600 }}>Live Since:</span>
           <div style={{ marginTop: 4 }}>
             {time.days}d {time.hours}h {time.minutes}m {time.seconds}s
           </div>
@@ -67,7 +66,7 @@ const BuildTimer: React.FC = () => {
       ) : (
         <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <svg width="20" height="20" fill="none" viewBox="0 0 24 24" style={{ marginRight: 4 }}><circle cx="12" cy="12" r="10" stroke="#fff" strokeWidth="2"/><path d="M12 6v6l4 2" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg>
-          <span style={{ fontWeight: 600, fontSize: 13 }}>Build</span>
+          <span style={{ fontWeight: 600, fontSize: 13 }}>Live</span>
         </span>
       )}
     </div>
