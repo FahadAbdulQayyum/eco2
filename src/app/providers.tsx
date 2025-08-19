@@ -10,9 +10,10 @@ type Props = {
   children: React.ReactNode;
 };
 
-const Providers = ({ children }: Props) => {
-  const { store, persistor } = makeStore();
+// Create store outside component to prevent recreation on every render
+const { store, persistor } = makeStore();
 
+const Providers = ({ children }: Props) => {
   return (
     <Provider store={store}>
       <PersistGate

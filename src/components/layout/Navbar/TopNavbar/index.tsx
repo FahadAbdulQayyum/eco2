@@ -79,6 +79,9 @@ const TopNavbar = () => {
   const dispatch = useAppDispatch();
   const toast = useToast();
 
+  // Debug logging
+  console.log('TopNavbar - Auth State:', { currentUser, isAuthenticated });
+
   const handleLogout = () => {
     dispatch(signOut());
     setShowUserMenu(false);
@@ -146,6 +149,11 @@ const TopNavbar = () => {
             />
           </Link>
           <CartBtn />
+          
+          {/* Debug info - remove this later */}
+          <div className="mr-2 text-xs text-gray-500">
+            Auth: {isAuthenticated ? 'Yes' : 'No'} | User: {currentUser?.name || 'None'}
+          </div>
           
           {/* User section - shows different content based on auth status */}
           {isAuthenticated && currentUser ? (
