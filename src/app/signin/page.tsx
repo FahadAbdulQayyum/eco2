@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/Toast";
 import { useAppDispatch } from "@/lib/hooks/redux";
 import { signInSuccess } from "@/lib/features/auth/authSlice";
+import { useRouter } from "next/navigation";
 
 type User = {
   id: number;
@@ -20,6 +21,7 @@ export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +48,11 @@ export default function SignInPage() {
         // Clear form
         setEmail("");
         setPassword("");
+        
+        // Redirect to home page after a short delay
+        setTimeout(() => {
+          router.push('/');
+        }, 1000);
       } else {
         toast.showToast("Invalid email or password. Please try again.", "error");
       }
