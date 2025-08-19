@@ -56,7 +56,33 @@ const BuildTimer: React.FC = () => {
       title={open ? "Hide live timer" : "Show live timer"}
     >
       {open ? (
-        <div style={{ width: "100%", textAlign: "center" }}>
+        <div style={{ width: "100%", textAlign: "center", position: "relative" }}>
+          <div 
+            style={{ 
+              position: "absolute", 
+              top: -8, 
+              right: -8, 
+              width: 20, 
+              height: 20, 
+              borderRadius: "50%", 
+              background: "#f0f0f0", 
+              display: "flex", 
+              alignItems: "center", 
+              justifyContent: "center", 
+              cursor: "pointer",
+              fontSize: 12,
+              fontWeight: "bold",
+              color: "#666",
+              border: "1px solid #ddd"
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen(false);
+            }}
+            title="Close timer"
+          >
+            ×
+          </div>
           <span style={{ fontWeight: 600 }}>Live Since:</span>
           <div style={{ marginTop: 4 }}>
             {time.days}d {time.hours}h {time.minutes}m {time.seconds}s
