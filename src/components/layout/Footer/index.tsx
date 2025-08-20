@@ -70,18 +70,14 @@ const Footer = () => {
             <div className="flex flex-col lg:col-span-3 lg:max-w-[248px]">
               <h1
                 className={cn([
-                  integralCF.className,
+                  // integralCF.className,
                   "text-[28px] lg:text-[32px] mb-6",
                 ])}
               >
-                TAH
-                <span className="lowercase!">i</span>
-                RZA
-                <span className="lowercase!">i</span>
-                .CO
+                TAHiRZAi.CO
               </h1>
               <p className="text-black/60 text-sm mb-9">
-                Wee have clothes that suits your style and which you’re proud to
+                We have clothes that suits your style and which you’re proud to
                 wear. From women to men.
               </p>
               <div className="flex items-center">
