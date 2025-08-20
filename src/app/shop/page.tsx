@@ -46,24 +46,12 @@ export default function ShopPage() {
     );
 
     if (hasActiveFilters) {
-      // Add mock category, colors, sizes, and brands adapted for shoes
-      const brandOptions = [
-        "Nike",
-        "Adidas",
-        "Puma",
-        "Reebok",
-        "New Balance",
-        "Asics",
-        "Vans",
-        "Converse",
-        "Skechers",
-      ];
+      // Add mock category, colors, and sizes adapted for shoes
       const productsWithAttributes = allProducts.map((product, index) => ({
         ...product,
         category: index < 4 ? "sneakers" : index < 8 ? "running" : "formal",
         colors: index % 2 === 0 ? ["white", "black"] : ["blue", "red"],
         sizes: index % 3 === 0 ? ["EU 40", "EU 41"] : ["EU 42", "EU 43"],
-        brand: brandOptions[index % brandOptions.length],
         dressStyle: index < 6 ? "lifestyle" : "performance",
       }));
 
