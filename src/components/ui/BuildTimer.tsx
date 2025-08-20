@@ -66,7 +66,7 @@ const BuildTimer: React.FC = () => {
               width: 20, 
               height: 20, 
               borderRadius: "50%", 
-              background: "red", 
+              background: "black", 
               display: "flex", 
               alignItems: "center", 
               justifyContent: "center", 
