@@ -1,3 +1,5 @@
+"use client";
+
 import { useAppSelector } from "@/lib/hooks/redux";
 import { RootState } from "@/lib/store";
 
