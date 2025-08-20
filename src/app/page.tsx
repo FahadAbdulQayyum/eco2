@@ -9,8 +9,8 @@ export const newArrivalsData: Product[] = [
   {
     id: 1,
     title: "Air Runner Sneakers",
-    srcUrl: "/images/pic1.png",
-    gallery: ["/images/pic1.png", "/images/pic10.png", "/images/pic11.png"],
+    srcUrl: "/img/pic1.png",
+    gallery: ["/img/pic1.png", "/img/pic10.png", "/img/pic11.png"],
     price: 120,
     discount: {
       amount: 0,
@@ -21,8 +21,8 @@ export const newArrivalsData: Product[] = [
   {
     id: 2,
     title: "Trail Grip Running Shoes",
-    srcUrl: "/images/pic2.png",
-    gallery: ["/images/pic2.png"],
+    srcUrl: "/img/pic2.png",
+    gallery: ["/img/pic2.png"],
     price: 260,
     discount: {
       amount: 0,
@@ -33,8 +33,8 @@ export const newArrivalsData: Product[] = [
   {
     id: 3,
     title: "Classic Canvas Sneakers",
-    srcUrl: "/images/pic3.png",
-    gallery: ["/images/pic3.png"],
+    srcUrl: "/img/pic3.png",
+    gallery: ["/img/pic3.png"],
     price: 180,
     discount: {
       amount: 0,
@@ -45,8 +45,8 @@ export const newArrivalsData: Product[] = [
   {
     id: 4,
     title: "Leather Derby Formal Shoes",
-    srcUrl: "/images/pic4.png",
-    gallery: ["/images/pic4.png", "/images/pic10.png", "/images/pic11.png"],
+    srcUrl: "/img/pic4.png",
+    gallery: ["/img/pic4.png", "/img/pic10.png", "/img/pic11.png"],
     price: 160,
     discount: {
       amount: 0,
@@ -60,8 +60,8 @@ export const topSellingData: Product[] = [
   {
     id: 5,
     title: "Retro Court Sneakers",
-    srcUrl: "/images/pic5.png",
-    gallery: ["/images/pic5.png", "/images/pic10.png", "/images/pic11.png"],
+    srcUrl: "/img/pic5.png",
+    gallery: ["/img/pic5.png", "/img/pic10.png", "/img/pic11.png"],
     price: 232,
     discount: {
       amount: 0,
@@ -72,8 +72,8 @@ export const topSellingData: Product[] = [
   {
     id: 6,
     title: "Lightweight Jogging Shoes",
-    srcUrl: "/images/pic6.png",
-    gallery: ["/images/pic6.png", "/images/pic10.png", "/images/pic11.png"],
+    srcUrl: "/img/pic6.png",
+    gallery: ["/img/pic6.png", "/img/pic10.png", "/img/pic11.png"],
     price: 145,
     discount: {
       amount: 0,
@@ -84,8 +84,8 @@ export const topSellingData: Product[] = [
   {
     id: 7,
     title: "Everyday Slip-On Sneakers",
-    srcUrl: "/images/pic7.png",
-    gallery: ["/images/pic7.png"],
+    srcUrl: "/img/pic7.png",
+    gallery: ["/img/pic7.png"],
     price: 80,
     discount: {
       amount: 0,
@@ -96,8 +96,8 @@ export const topSellingData: Product[] = [
   {
     id: 8,
     title: "Premium Leather Oxfords",
-    srcUrl: "/images/pic8.png",
-    gallery: ["/images/pic8.png"],
+    srcUrl: "/img/pic8.png",
+    gallery: ["/img/pic8.png"],
     price: 210,
     discount: {
       amount: 0,
@@ -111,8 +111,8 @@ export const relatedProductData: Product[] = [
   {
     id: 12,
     title: "All-Terrain Hiking Boots",
-    srcUrl: "/images/pic12.png",
-    gallery: ["/images/pic12.png", "/images/pic10.png", "/images/pic11.png"],
+    srcUrl: "/img/pic12.png",
+    gallery: ["/img/pic12.png", "/img/pic10.png", "/img/pic11.png"],
     price: 242,
     discount: {
       amount: 0,
@@ -123,8 +123,8 @@ export const relatedProductData: Product[] = [
   {
     id: 13,
     title: "Breathable Mesh Trainers",
-    srcUrl: "/images/pic13.png",
-    gallery: ["/images/pic13.png", "/images/pic10.png", "/images/pic11.png"],
+    srcUrl: "/img/pic13.png",
+    gallery: ["/img/pic13.png", "/img/pic10.png", "/img/pic11.png"],
     price: 145,
     discount: {
       amount: 0,
@@ -135,8 +135,8 @@ export const relatedProductData: Product[] = [
   {
     id: 14,
     title: "Minimalist Street Sneakers",
-    srcUrl: "/images/pic14.png",
-    gallery: ["/images/pic14.png"],
+    srcUrl: "/img/pic14.png",
+    gallery: ["/img/pic14.png"],
     price: 180,
     discount: {
       amount: 0,
@@ -147,8 +147,8 @@ export const relatedProductData: Product[] = [
   {
     id: 15,
     title: "Comfort Foam Running Shoes",
-    srcUrl: "/images/pic15.png",
-    gallery: ["/images/pic15.png"],
+    srcUrl: "/img/pic15.png",
+    gallery: ["/img/pic15.png"],
     price: 150,
     discount: {
       amount: 0,
