@@ -22,7 +22,7 @@ const Header = () => {
               "text-4xl lg:text-[64px] lg:leading-[64px] mb-5 lg:mb-8",
             ])}
           >
-            FIND CLOTHES THAT MATCHES YOUR STYLE
+            FIND SHOES THAT MATCH YOUR STYLE
           </motion.h2>
           <motion.p
             initial={{ y: "100px", opacity: 0 }}
@@ -31,9 +31,8 @@ const Header = () => {
             transition={{ delay: 0.5, duration: 0.6 }}
             className="text-black/60 text-sm lg:text-base mb-6 lg:mb-8 max-w-[545px]"
           >
-            Browse through our diverse range of meticulously crafted garments,
-            designed to bring out your individuality and cater to your sense of
-            style.
+            Browse our diverse range of meticulously crafted footwear, designed
+            to bring out your individuality and support your lifestyle.
           </motion.p>
           <motion.div
             initial={{ y: "100px", opacity: 0 }}

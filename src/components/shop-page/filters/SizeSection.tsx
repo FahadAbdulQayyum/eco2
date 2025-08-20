@@ -16,15 +16,15 @@ const SizeSection = () => {
   const selectedSizes = useAppSelector((state) => state.shop.filters.sizes);
 
   const sizeOptions = [
-    "XX-Small",
-    "X-Small",
-    "Small",
-    "Medium",
-    "Large",
-    "X-Large",
-    "XX-Large",
-    "3X-Large",
-    "4X-Large",
+    "EU 38",
+    "EU 39",
+    "EU 40",
+    "EU 41",
+    "EU 42",
+    "EU 43",
+    "EU 44",
+    "EU 45",
+    "EU 46",
   ];
 
   const handleSizeClick = (size: string) => {

@@ -17,20 +17,20 @@ type DressStyle = {
 
 const dressStylesData: DressStyle[] = [
   {
-    title: "Casual",
-    value: "casual",
+    title: "Lifestyle",
+    value: "lifestyle",
+  },
+  {
+    title: "Performance",
+    value: "performance",
+  },
+  {
+    title: "Outdoor",
+    value: "outdoor",
   },
   {
     title: "Formal",
     value: "formal",
-  },
-  {
-    title: "Party",
-    value: "party",
-  },
-  {
-    title: "Gym",
-    value: "gym",
   },
 ];
 
@@ -50,7 +50,7 @@ const DressStyleSection = () => {
     <Accordion type="single" collapsible defaultValue="filter-style">
       <AccordionItem value="filter-style" className="border-none">
         <AccordionTrigger className="text-black font-bold text-xl hover:no-underline p-0 py-0.5">
-          Dress Style
+          Shoe Style
         </AccordionTrigger>
         <AccordionContent className="pt-4 pb-0">
           <div className="flex flex-col text-black/60 space-y-0.5">

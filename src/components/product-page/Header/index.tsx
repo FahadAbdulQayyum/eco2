@@ -77,8 +77,8 @@ const Header = ({ data }: { data: Product }) => {
             )}
           </div>
           <p className="text-sm sm:text-base text-black/60 mb-5">
-            This graphic t-shirt which is perfect for any occasion. Crafted from
-            a soft and breathable fabric, it offers superior comfort and style.
+            Versatile footwear built for comfort and performance. Breathable uppers,
+            cushioned midsoles, and durable outsoles keep you moving in style.
           </p>
           <hr className="h-[1px] border-t-black/10 mb-5" />
           <ColorSelection />

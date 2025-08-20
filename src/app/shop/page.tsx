@@ -46,13 +46,13 @@ export default function ShopPage() {
     );
 
     if (hasActiveFilters) {
-      // Add mock category, colors, and sizes to products for demo purposes
+      // Add mock category, colors, and sizes adapted for shoes
       const productsWithAttributes = allProducts.map((product, index) => ({
         ...product,
-        category: index < 4 ? "t-shirts" : index < 8 ? "shirts" : "jeans",
-        colors: index % 2 === 0 ? ["red", "blue"] : ["green", "black"],
-        sizes: index % 3 === 0 ? ["Small", "Medium"] : ["Large", "X-Large"],
-        dressStyle: index < 6 ? "casual" : "formal",
+        category: index < 4 ? "sneakers" : index < 8 ? "running" : "formal",
+        colors: index % 2 === 0 ? ["white", "black"] : ["blue", "red"],
+        sizes: index % 3 === 0 ? ["EU 40", "EU 41"] : ["EU 42", "EU 43"],
+        dressStyle: index < 6 ? "lifestyle" : "performance",
       }));
 
       const filtered = filterProducts(productsWithAttributes, filters);
@@ -85,7 +85,7 @@ export default function ShopPage() {
           <div className="flex flex-col w-full space-y-5">
             <div className="flex flex-col lg:flex-row lg:justify-between">
               <div className="flex items-center justify-between">
-                <h1 className="font-bold text-2xl md:text-[32px]">Casual</h1>
+                <h1 className="font-bold text-2xl md:text-[32px]">Shoes</h1>
                 <MobileFilters />
               </div>
               <div className="flex flex-col sm:items-center sm:flex-row">

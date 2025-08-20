@@ -9,7 +9,7 @@ import { Review } from "@/types/review.types";
 export const newArrivalsData: Product[] = [
   {
     id: 1,
-    title: "T-shirt with Tape Details",
+    title: "Air Runner Sneakers",
     srcUrl: "/images/pic1.png",
     gallery: ["/images/pic1.png", "/images/pic10.png", "/images/pic11.png"],
     price: 120,
@@ -21,7 +21,7 @@ export const newArrivalsData: Product[] = [
   },
   {
     id: 2,
-    title: "Skinny Fit Jeans",
+    title: "Trail Grip Running Shoes",
     srcUrl: "/images/pic2.png",
     gallery: ["/images/pic2.png"],
     price: 260,
@@ -33,7 +33,7 @@ export const newArrivalsData: Product[] = [
   },
   {
     id: 3,
-    title: "Chechered Shirt",
+    title: "Classic Canvas Sneakers",
     srcUrl: "/images/pic3.png",
     gallery: ["/images/pic3.png"],
     price: 180,
@@ -45,7 +45,7 @@ export const newArrivalsData: Product[] = [
   },
   {
     id: 4,
-    title: "Sleeve Striped T-shirt",
+    title: "Leather Derby Formal Shoes",
     srcUrl: "/images/pic4.png",
     gallery: ["/images/pic4.png", "/images/pic10.png", "/images/pic11.png"],
     price: 160,
@@ -60,7 +60,7 @@ export const newArrivalsData: Product[] = [
 export const topSellingData: Product[] = [
   {
     id: 5,
-    title: "Vertical Striped Shirt",
+    title: "Retro Court Sneakers",
     srcUrl: "/images/pic5.png",
     gallery: ["/images/pic5.png", "/images/pic10.png", "/images/pic11.png"],
     price: 232,
@@ -72,7 +72,7 @@ export const topSellingData: Product[] = [
   },
   {
     id: 6,
-    title: "Courage Graphic T-shirt",
+    title: "Lightweight Jogging Shoes",
     srcUrl: "/images/pic6.png",
     gallery: ["/images/pic6.png", "/images/pic10.png", "/images/pic11.png"],
     price: 145,
@@ -84,7 +84,7 @@ export const topSellingData: Product[] = [
   },
   {
     id: 7,
-    title: "Loose Fit Bermuda Shorts",
+    title: "Everyday Slip-On Sneakers",
     srcUrl: "/images/pic7.png",
     gallery: ["/images/pic7.png"],
     price: 80,
@@ -96,7 +96,7 @@ export const topSellingData: Product[] = [
   },
   {
     id: 8,
-    title: "Faded Skinny Jeans",
+    title: "Premium Leather Oxfords",
     srcUrl: "/images/pic8.png",
     gallery: ["/images/pic8.png"],
     price: 210,
@@ -111,7 +111,7 @@ export const topSellingData: Product[] = [
 export const relatedProductData: Product[] = [
   {
     id: 12,
-    title: "Polo with Contrast Trims",
+    title: "All-Terrain Hiking Boots",
     srcUrl: "/images/pic12.png",
     gallery: ["/images/pic12.png", "/images/pic10.png", "/images/pic11.png"],
     price: 242,
@@ -123,7 +123,7 @@ export const relatedProductData: Product[] = [
   },
   {
     id: 13,
-    title: "Gradient Graphic T-shirt",
+    title: "Breathable Mesh Trainers",
     srcUrl: "/images/pic13.png",
     gallery: ["/images/pic13.png", "/images/pic10.png", "/images/pic11.png"],
     price: 145,
@@ -135,7 +135,7 @@ export const relatedProductData: Product[] = [
   },
   {
     id: 14,
-    title: "Polo with Tipping Details",
+    title: "Minimalist Street Sneakers",
     srcUrl: "/images/pic14.png",
     gallery: ["/images/pic14.png"],
     price: 180,
@@ -147,7 +147,7 @@ export const relatedProductData: Product[] = [
   },
   {
     id: 15,
-    title: "Black Striped T-shirt",
+    title: "Comfort Foam Running Shoes",
     srcUrl: "/images/pic15.png",
     gallery: ["/images/pic15.png"],
     price: 150,
@@ -171,35 +171,35 @@ export const reviewsData: Review[] = [
   {
     id: 2,
     user: "Sarah M.",
-    content: `"I'm blown away by the quality and style of the clothes I received from TAHIRZAI.CO. From casual wear to elegant dresses, every piece I've bought has exceeded my expectations.”`,
+    content: `"I'm blown away by the quality and comfort of the shoes I received from TAHIRZAI.CO. From lifestyle to performance pairs, every purchase has exceeded my expectations.”`,
     rating: 5,
     date: "August 15, 2023",
   },
   {
     id: 3,
     user: "Ethan R.",
-    content: `"This t-shirt is a must-have for anyone who appreciates good design. The minimalistic yet stylish pattern caught my eye, and the fit is perfect. I can see the designer's touch in every aspect of this shirt."`,
+    content: `"These sneakers are a must-have for anyone who appreciates good design. The minimal yet stylish silhouette caught my eye, and the fit is perfect."`,
     rating: 5,
     date: "August 16, 2023",
   },
   {
     id: 4,
     user: "Olivia P.",
-    content: `"As a UI/UX enthusiast, I value simplicity and functionality. This t-shirt not only represents those principles but also feels great to wear. It's evident that the designer poured their creativity into making this t-shirt stand out."`,
+    content: `"As a UI/UX enthusiast, I value simplicity and functionality. These shoes represent those principles and feel great to wear. The attention to detail is outstanding."`,
     rating: 5,
     date: "August 17, 2023",
   },
   {
     id: 5,
     user: "Liam K.",
-    content: `"This t-shirt is a fusion of comfort and creativity. The fabric is soft, and the design speaks volumes about the designer's skill. It's like wearing a piece of art that reflects my passion for both design and fashion."`,
+    content: `"These shoes are a fusion of comfort and creativity. The cushioning is plush, and the design speaks volumes about the brand's craft. It's like wearing a piece of art."`,
     rating: 5,
     date: "August 18, 2023",
   },
   {
     id: 6,
     user: "Samantha D.",
-    content: `"I absolutely love this t-shirt! The design is unique and the fabric feels so comfortable. As a fellow designer, I appreciate the attention to detail. It's become my favorite go-to shirt."`,
+    content: `"I absolutely love these shoes! The design is unique and they feel so comfortable. As a designer, I appreciate the attention to detail. They've become my daily go-to."`,
     rating: 5,
     date: "August 19, 2023",
   },
@@ -212,7 +212,7 @@ export default function Home() {
       <Brands />
       <main className="my-[50px] sm:my-[72px]">
         <ProductListSec
-          title="NEW ARRIVALS"
+          title="NEW SHOE ARRIVALS"
           data={newArrivalsData}
           viewAllLink="/shop#new-arrivals"
         />
@@ -221,7 +221,7 @@ export default function Home() {
         </div>
         <div className="mb-[50px] sm:mb-20">
           <ProductListSec
-            title="top selling"
+            title="top selling shoes"
             data={topSellingData}
             viewAllLink="/shop#top-selling"
           />

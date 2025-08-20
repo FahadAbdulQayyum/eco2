@@ -13,24 +13,24 @@ type FaqItem = {
 
 const faqsData: FaqItem[] = [
   {
-    question: "What is the material of the t-shirt?",
+    question: "What materials are the shoes made from?",
     answer:
-      "Provide details about the fabric type (e.g., cotton, polyester, blend), weight, and any specific features.",
+      "Provide details about the upper (e.g., leather, mesh, knit), midsole cushioning, outsole rubber, and any special technologies.",
   },
   {
-    question: "What are the care instructions for the t-shirt?",
+    question: "How do I care for these shoes?",
     answer:
-      "Outline recommended washing, drying, and ironing methods to maintain quality and longevity.",
+      "Outline cleaning tips (e.g., wipe with damp cloth, use mild soap), drying guidelines, and storage recommendations.",
   },
   {
-    question: "What is the design or print on the t-shirt made of?",
+    question: "What type of cushioning and support do these shoes provide?",
     answer:
-      "Explain the material used for the design (e.g., vinyl, screen print, embroidery) and its durability.",
+      "Explain midsole foam, air units, arch support, heel counter, and overall stability or flexibility.",
   },
   {
-    question: "Is the t-shirt unisex or designed for specific genders?",
+    question: "Are these shoes unisex or designed for specific genders?",
     answer:
-      "Indicate whether the shirt is suitable for both men and women or targeted towards a particular gender.",
+      "Indicate whether the shoes are unisex or targeted towards a particular gender.",
   },
   {
     question: "What are the shipping options and costs?",
@@ -38,7 +38,7 @@ const faqsData: FaqItem[] = [
       "Provide information about shipping methods, estimated delivery times, and associated fees.",
   },
   {
-    question: "What is the return policy for the t-shirt?",
+    question: "What is the return policy for these shoes?",
     answer:
       "Outline the return window, conditions, and refund or exchange procedures.",
   },
