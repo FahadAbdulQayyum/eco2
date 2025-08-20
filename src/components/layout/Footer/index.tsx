@@ -75,13 +75,13 @@ const Footer = () => {
                 ])}
               >
                 TAH
-                <span className="lowercase">i</span>
+                <span className="lowercase!">i</span>
                 RZA
-                <span className="lowercase">i</span>
+                <span className="lowercase!">i</span>
                 .CO
               </h1>
               <p className="text-black/60 text-sm mb-9">
-                We have clothes that suits your style and which you’re proud to
+                Wee have clothes that suits your style and which you’re proud to
                 wear. From women to men.
               </p>
               <div className="flex items-center">
