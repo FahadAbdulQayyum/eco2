@@ -74,7 +74,11 @@ const Footer = () => {
                   "text-[28px] lg:text-[32px] mb-6",
                 ])}
               >
-                TAHiRZAi.CO
+                TAH
+                <span className="lowercase">i</span>
+                RZA
+                <span className="lowercase">i</span>
+                .CO
               </h1>
               <p className="text-black/60 text-sm mb-9">
                 We have clothes that suits your style and which you’re proud to
