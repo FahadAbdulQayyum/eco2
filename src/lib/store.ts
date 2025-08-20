@@ -5,12 +5,13 @@ import productsReducer from "./features/products/productsSlice";
 import cartsReducer from "./features/carts/cartsSlice";
 import authReducer from "./features/auth/authSlice";
 import shopReducer from "./features/shop/shopSlice";
+import ordersReducer from "./features/orders/ordersSlice";
 
 const persistConfig = {
   key: "root",
   storage,
   version: 1,
-  whitelist: ["carts", "auth", "shop"],
+  whitelist: ["carts", "auth", "shop", "orders"],
 };
 
 const rootReducer = combineReducers({
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   carts: cartsReducer,
   auth: authReducer,
   shop: shopReducer,
+  orders: ordersReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

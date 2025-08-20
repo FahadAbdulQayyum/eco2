@@ -11,13 +11,53 @@ import { MdOutlineLocalOffer } from "react-icons/md";
 import { TbBasketExclamation } from "react-icons/tb";
 import React from "react";
 import { RootState } from "@/lib/store";
-import { useAppSelector } from "@/lib/hooks/redux";
+import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
+import { addOrder } from "@/lib/features/orders/ordersSlice";
+import { v4 as uuidv4 } from "uuid";
+import { cartsSlice } from "@/lib/features/carts/cartsSlice";
+import { useState } from "react";
 import Link from "next/link";
 
 export default function CartPage() {
+  const dispatch = useAppDispatch();
   const { cart, totalPrice, adjustedTotalPrice } = useAppSelector(
     (state: RootState) => state.carts
   );
+  const [showModal, setShowModal] = useState(false);
+  const [cardInfo, setCardInfo] = useState({
+    cardNumber: "",
+    cardName: "",
+    expiry: "",
+    cvc: "",
+  });
+  const [error, setError] = useState("");
+
+  const handleCheckout = () => {
+    setShowModal(true);
+  };
+
+  const handleCardChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCardInfo({ ...cardInfo, [e.target.name]: e.target.value });
+  };
+
+  const handleOrder = () => {
+    if (!cardInfo.cardNumber || !cardInfo.cardName || !cardInfo.expiry || !cardInfo.cvc) {
+      setError("Please fill all card fields.");
+      return;
+    }
+    if (!cart) return;
+    dispatch(
+      addOrder({
+        id: uuidv4(),
+        products: cart.items,
+        total: adjustedTotalPrice,
+        cardInfo,
+        createdAt: new Date().toISOString(),
+      })
+    );
+    dispatch(cartsSlice.actions.clearCart());
+    setShowModal(false);
+  };
 
   return (
     <main className="pb-20">
@@ -101,6 +141,7 @@ export default function CartPage() {
                 <Button
                   type="button"
                   className="text-sm md:text-base font-medium bg-black rounded-full w-full py-4 h-[54px] md:h-[60px] group"
+                  onClick={handleCheckout}
                 >
                   Go to Checkout{" "}
                   <FaArrowRight className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
@@ -118,6 +159,54 @@ export default function CartPage() {
           </div>
         )}
       </div>
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">Enter Card Info</h2>
+            <input
+              type="text"
+              name="cardNumber"
+              placeholder="Card Number"
+              className="w-full mb-2 p-2 border rounded"
+              value={cardInfo.cardNumber}
+              onChange={handleCardChange}
+            />
+            <input
+              type="text"
+              name="cardName"
+              placeholder="Name on Card"
+              className="w-full mb-2 p-2 border rounded"
+              value={cardInfo.cardName}
+              onChange={handleCardChange}
+            />
+            <input
+              type="text"
+              name="expiry"
+              placeholder="MM/YY"
+              className="w-full mb-2 p-2 border rounded"
+              value={cardInfo.expiry}
+              onChange={handleCardChange}
+            />
+            <input
+              type="text"
+              name="cvc"
+              placeholder="CVC"
+              className="w-full mb-2 p-2 border rounded"
+              value={cardInfo.cvc}
+              onChange={handleCardChange}
+            />
+            {error && <div className="text-red-500 mb-2">{error}</div>}
+            <div className="flex justify-end space-x-2">
+              <button className="px-4 py-2 bg-gray-300 rounded" onClick={() => setShowModal(false)}>
+                Cancel
+              </button>
+              <button className="px-4 py-2 bg-black text-white rounded" onClick={handleOrder}>
+                Confirm Order
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

@@ -8,6 +8,7 @@ import HolyLoader from "holy-loader";
 import Providers from "./providers";
 import BuildTimer from "@/components/ui/BuildTimer";
 import { ToastProvider } from "@/components/ui/Toast";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Tahir Zai",
@@ -31,6 +32,11 @@ export default function RootLayout({
           <TopBanner />
           <Providers>
             <TopNavbar />
+            <nav className="w-full bg-gray-100 py-2 px-4 flex justify-end">
+              <Link href="/my-orders" className="text-sm font-medium hover:underline">
+                My Orders
+              </Link>
+            </nav>
             {children}
           </Providers>
           <Footer />
