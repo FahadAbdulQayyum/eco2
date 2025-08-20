@@ -17,12 +17,15 @@ import { v4 as uuidv4 } from "uuid";
 import { cartsSlice } from "@/lib/features/carts/cartsSlice";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const { cart, totalPrice, adjustedTotalPrice } = useAppSelector(
     (state: RootState) => state.carts
   );
+  const isAuthenticated = useAppSelector((state: RootState) => state.auth.isAuthenticated);
   const [showModal, setShowModal] = useState(false);
   const [cardInfo, setCardInfo] = useState({
     cardNumber: "",
@@ -33,6 +36,10 @@ export default function CartPage() {
   const [error, setError] = useState("");
 
   const handleCheckout = () => {
+    if (!isAuthenticated) {
+      router.push("/signin?redirect=/cart");
+      return;
+    }
     setShowModal(true);
   };
 
