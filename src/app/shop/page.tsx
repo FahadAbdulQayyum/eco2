@@ -64,6 +64,7 @@ export default function ShopPage() {
         colors: index % 2 === 0 ? ["white", "black"] : ["blue", "red"],
         sizes: index % 3 === 0 ? ["EU 40", "EU 41"] : ["EU 42", "EU 43"],
         brand: brandOptions[index % brandOptions.length],
+        dressStyle: index < 6 ? "lifestyle" : "performance",
       }));
 
       const filtered = filterProducts(productsWithAttributes, filters);

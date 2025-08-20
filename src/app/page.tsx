@@ -31,7 +31,7 @@ export const newArrivalsData: Product[] = [
     rating: 3.5,
   },
   {
-    id: 3,
+      id: 3,
     title: "Classic Canvas Sneakers",
     srcUrl: "/imgs/pic3.png",
     gallery: ["/imgs/pic3.png"],
@@ -84,7 +84,7 @@ export const topSellingData: Product[] = [
   {
     id: 7,
     title: "Everyday Slip-On Sneakers",
-    srcUrl: "/imgs/pic7.png",
+      srcUrl: "/imgs/pic7.png",
     gallery: ["/imgs/pic7.png"],
     price: 80,
     discount: {
