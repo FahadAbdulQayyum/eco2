@@ -46,6 +46,7 @@ export default function ShopPage() {
     );
 
     if (hasActiveFilters) {
+<<<<<<< HEAD
       // Add mock category, colors, sizes, and brands adapted for shoes
       const brandOptions = [
         "Nike",
@@ -58,12 +59,19 @@ export default function ShopPage() {
         "Converse",
         "Skechers",
       ];
+=======
+      // Add mock category, colors, and sizes adapted for shoes
+>>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
       const productsWithAttributes = allProducts.map((product, index) => ({
         ...product,
         category: index < 4 ? "sneakers" : index < 8 ? "running" : "formal",
         colors: index % 2 === 0 ? ["white", "black"] : ["blue", "red"],
         sizes: index % 3 === 0 ? ["EU 40", "EU 41"] : ["EU 42", "EU 43"],
+<<<<<<< HEAD
         brand: brandOptions[index % brandOptions.length],
+=======
+        dressStyle: index < 6 ? "lifestyle" : "performance",
+>>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
       }));
 
       const filtered = filterProducts(productsWithAttributes, filters);
