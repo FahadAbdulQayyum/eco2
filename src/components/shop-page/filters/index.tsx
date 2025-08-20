@@ -2,7 +2,8 @@
 import React from "react";
 import CategoriesSection from "@/components/shop-page/filters/CategoriesSection";
 import ColorsSection from "@/components/shop-page/filters/ColorsSection";
-import DressStyleSection from "@/components/shop-page/filters/DressStyleSection";
+// Removed dress style for shoe-only store
+import BrandSection from "@/components/shop-page/filters/BrandSection";
 import PriceSection from "@/components/shop-page/filters/PriceSection";
 import SizeSection from "@/components/shop-page/filters/SizeSection";
 import { Button } from "@/components/ui/button";
@@ -43,7 +44,7 @@ const Filters = () => {
       <hr className="border-t-black/10" />
       <SizeSection />
       <hr className="border-t-black/10" />
-      <DressStyleSection />
+      <BrandSection />
       
       <div className="space-y-3 pt-2">
         <Button

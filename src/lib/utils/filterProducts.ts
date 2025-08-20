@@ -15,6 +15,7 @@ export interface Product {
   colors?: string[];
   sizes?: string[];
   dressStyle?: string;
+  brand?: string;
 }
 
 export const filterProducts = (products: Product[], filters: FilterState): Product[] => {
@@ -49,6 +50,13 @@ export const filterProducts = (products: Product[], filters: FilterState): Produ
     // Dress style filter
     if (filters.dressStyle && product.dressStyle && product.dressStyle !== filters.dressStyle) {
       return false;
+    }
+
+    // Brands filter (multi-select)
+    if (filters.brands && filters.brands.length > 0 && product.brand) {
+      if (!filters.brands.includes(product.brand)) {
+        return false;
+      }
     }
 
     return true;

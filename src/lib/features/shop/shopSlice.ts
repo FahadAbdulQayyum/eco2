@@ -6,6 +6,7 @@ export interface FilterState {
   priceRange: [number, number];
   sizes: string[];
   dressStyle: string | null;
+  brands: string[];
 }
 
 export interface ShopState {
@@ -21,6 +22,7 @@ const initialState: ShopState = {
     priceRange: [0, 250],
     sizes: [],
     dressStyle: null,
+    brands: [],
   },
   filteredProducts: [],
   isFiltered: false,
@@ -45,6 +47,9 @@ const shopSlice = createSlice({
     setDressStyle: (state, action: PayloadAction<string | null>) => {
       state.filters.dressStyle = action.payload;
     },
+    setBrands: (state, action: PayloadAction<string[]>) => {
+      state.filters.brands = action.payload;
+    },
     setFilteredProducts: (state, action: PayloadAction<any[]>) => {
       state.filteredProducts = action.payload;
       state.isFiltered = true;
@@ -67,6 +72,7 @@ export const {
   setPriceRange,
   setSizes,
   setDressStyle,
+  setBrands,
   setFilteredProducts,
   clearFilters,
   resetFilters,
