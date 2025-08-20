@@ -22,6 +22,8 @@ export type Order = {
   total: number;
   cardInfo: CardInfo;
   createdAt: string;
+  userId: number;
+  userName: string;
 };
 
 interface OrdersState {

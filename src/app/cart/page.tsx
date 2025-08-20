@@ -26,6 +26,7 @@ export default function CartPage() {
     (state: RootState) => state.carts
   );
   const isAuthenticated = useAppSelector((state: RootState) => state.auth.isAuthenticated);
+  const currentUser = useAppSelector((state: RootState) => state.auth.currentUser);
   const [showModal, setShowModal] = useState(false);
   const [cardInfo, setCardInfo] = useState({
     cardNumber: "",
@@ -52,7 +53,7 @@ export default function CartPage() {
       setError("Please fill all card fields.");
       return;
     }
-    if (!cart) return;
+    if (!cart || !currentUser) return;
     dispatch(
       addOrder({
         id: uuidv4(),
@@ -60,6 +61,8 @@ export default function CartPage() {
         total: adjustedTotalPrice,
         cardInfo,
         createdAt: new Date().toISOString(),
+        userId: currentUser.id,
+        userName: currentUser.name,
       })
     );
     dispatch(cartsSlice.actions.clearCart());
