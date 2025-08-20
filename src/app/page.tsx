@@ -9,13 +9,8 @@ export const newArrivalsData: Product[] = [
   {
     id: 1,
     title: "Air Runner Sneakers",
-<<<<<<< HEAD
     srcUrl: "/imgs/pic1.png",
     gallery: ["/imgs/pic1.png", "/imgs/pic10.png", "/imgs/pic11.png"],
-=======
-    srcUrl: "/images/pic1.png",
-    gallery: ["/images/pic1.png", "/images/pic10.png", "/images/pic11.png"],
->>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
     price: 120,
     discount: {
       amount: 0,
@@ -26,13 +21,8 @@ export const newArrivalsData: Product[] = [
   {
     id: 2,
     title: "Trail Grip Running Shoes",
-<<<<<<< HEAD
     srcUrl: "/imgs/pic2.png",
     gallery: ["/imgs/pic2.png"],
-=======
-    srcUrl: "/images/pic2.png",
-    gallery: ["/images/pic2.png"],
->>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
     price: 260,
     discount: {
       amount: 0,
@@ -43,13 +33,8 @@ export const newArrivalsData: Product[] = [
   {
       id: 3,
     title: "Classic Canvas Sneakers",
-<<<<<<< HEAD
     srcUrl: "/imgs/pic3.png",
     gallery: ["/imgs/pic3.png"],
-=======
-    srcUrl: "/images/pic3.png",
-    gallery: ["/images/pic3.png"],
->>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
     price: 180,
     discount: {
       amount: 0,
@@ -60,13 +45,8 @@ export const newArrivalsData: Product[] = [
   {
     id: 4,
     title: "Leather Derby Formal Shoes",
-<<<<<<< HEAD
     srcUrl: "/imgs/pic4.png",
     gallery: ["/imgs/pic4.png", "/imgs/pic10.png", "/imgs/pic11.png"],
-=======
-    srcUrl: "/images/pic4.png",
-    gallery: ["/images/pic4.png", "/images/pic10.png", "/images/pic11.png"],
->>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
     price: 160,
     discount: {
       amount: 0,
@@ -80,13 +60,8 @@ export const topSellingData: Product[] = [
   {
     id: 5,
     title: "Retro Court Sneakers",
-<<<<<<< HEAD
     srcUrl: "/imgs/pic5.png",
     gallery: ["/imgs/pic5.png", "/imgs/pic10.png", "/imgs/pic11.png"],
-=======
-    srcUrl: "/images/pic5.png",
-    gallery: ["/images/pic5.png", "/images/pic10.png", "/images/pic11.png"],
->>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
     price: 232,
     discount: {
       amount: 0,
@@ -97,13 +72,8 @@ export const topSellingData: Product[] = [
   {
     id: 6,
     title: "Lightweight Jogging Shoes",
-<<<<<<< HEAD
     srcUrl: "/imgs/pic6.png",
     gallery: ["/imgs/pic6.png", "/imgs/pic10.png", "/imgs/pic11.png"],
-=======
-    srcUrl: "/images/pic6.png",
-    gallery: ["/images/pic6.png", "/images/pic10.png", "/images/pic11.png"],
->>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
     price: 145,
     discount: {
       amount: 0,
@@ -114,17 +84,8 @@ export const topSellingData: Product[] = [
   {
     id: 7,
     title: "Everyday Slip-On Sneakers",
-<<<<<<< HEAD
-      srcUrl: "/imgs/pic7.png",
-=======
-<<<<<<< HEAD
     srcUrl: "/imgs/pic7.png",
->>>>>>> 8ddb5e9a345b7150728a2c1c26abdaaf96b3343b
     gallery: ["/imgs/pic7.png"],
-=======
-    srcUrl: "/images/pic7.png",
-    gallery: ["/images/pic7.png"],
->>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
     price: 80,
     discount: {
       amount: 0,
@@ -135,13 +96,8 @@ export const topSellingData: Product[] = [
   {
     id: 8,
     title: "Premium Leather Oxfords",
-<<<<<<< HEAD
     srcUrl: "/imgs/pic8.png",
     gallery: ["/imgs/pic8.png"],
-=======
-    srcUrl: "/images/pic8.png",
-    gallery: ["/images/pic8.png"],
->>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
     price: 210,
     discount: {
       amount: 0,
@@ -155,13 +111,8 @@ export const relatedProductData: Product[] = [
   {
     id: 12,
     title: "All-Terrain Hiking Boots",
-<<<<<<< HEAD
     srcUrl: "/imgs/pic12.png",
     gallery: ["/imgs/pic12.png", "/imgs/pic10.png", "/imgs/pic11.png"],
-=======
-    srcUrl: "/images/pic12.png",
-    gallery: ["/images/pic12.png", "/images/pic10.png", "/images/pic11.png"],
->>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
     price: 242,
     discount: {
       amount: 0,
@@ -172,13 +123,8 @@ export const relatedProductData: Product[] = [
   {
     id: 13,
     title: "Breathable Mesh Trainers",
-<<<<<<< HEAD
     srcUrl: "/imgs/pic13.png",
     gallery: ["/imgs/pic13.png", "/imgs/pic10.png", "/imgs/pic11.png"],
-=======
-    srcUrl: "/images/pic13.png",
-    gallery: ["/images/pic13.png", "/images/pic10.png", "/images/pic11.png"],
->>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
     price: 145,
     discount: {
       amount: 0,
@@ -189,13 +135,8 @@ export const relatedProductData: Product[] = [
   {
     id: 14,
     title: "Minimalist Street Sneakers",
-<<<<<<< HEAD
     srcUrl: "/imgs/pic14.png",
     gallery: ["/imgs/pic14.png"],
-=======
-    srcUrl: "/images/pic14.png",
-    gallery: ["/images/pic14.png"],
->>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
     price: 180,
     discount: {
       amount: 0,
@@ -206,13 +147,8 @@ export const relatedProductData: Product[] = [
   {
     id: 15,
     title: "Comfort Foam Running Shoes",
-<<<<<<< HEAD
     srcUrl: "/imgs/pic15.png",
     gallery: ["/imgs/pic15.png"],
-=======
-    srcUrl: "/images/pic15.png",
-    gallery: ["/images/pic15.png"],
->>>>>>> 4e4bde2 (Products of shoes added and removed rest unused, lets see)
     price: 150,
     discount: {
       amount: 0,
