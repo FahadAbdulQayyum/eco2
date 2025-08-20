@@ -70,7 +70,7 @@ const Footer = () => {
             <div className="flex flex-col lg:col-span-3 lg:max-w-[248px]">
               <h1
                 className={cn([
-                  // integralCF.className,
+                  integralCF.className,
                   "text-[28px] lg:text-[32px] mb-6",
                 ])}
               >
