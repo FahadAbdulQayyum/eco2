@@ -1,6 +1,7 @@
 import ProductListSec from "@/components/common/ProductListSec";
 import Brands from "@/components/homepage/Brands";
 import DressStyle from "@/components/homepage/DressStyle";
+import ShoesStyle from "@/components/homepage/ShoesStyle";
 import Header from "@/components/homepage/Header";
 import Reviews from "@/components/homepage/Reviews";
 import { Product } from "@/types/product.types";
@@ -225,6 +226,9 @@ export default function Home() {
             data={topSellingData}
             viewAllLink="/shop#top-selling"
           />
+        </div>
+        <div className="mb-[50px] sm:mb-20">
+          <ShoesStyle />
         </div>
         <div className="mb-[50px] sm:mb-20">
           <DressStyle />

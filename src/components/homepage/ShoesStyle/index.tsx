@@ -18,7 +18,7 @@ const DressStyle = () => {
             "text-[32px] leading-[36px] md:text-5xl mb-8 md:mb-14 capitalize",
           ])}
         >
-          BROWSE BY DRESS STYLE
+          BROWSE BY SHOES STYLE
         </motion.h2>
         <motion.div
           initial={{ y: "100px", opacity: 0 }}
@@ -30,12 +30,12 @@ const DressStyle = () => {
           <DressStyleCard
             title="Lifestyle"
             url="/shop#lifestyle"
-            className="md:max-w-[260px] lg:max-w-[360px] xl:max-w-[407px] h-[190px] bg-[url('/images/dress-style-1.png')]"
+            className="md:max-w-[260px] lg:max-w-[360px] xl:max-w-[407px] h-[190px] bg-[url('/images/shoes-style-1.png')]"
           />
           <DressStyleCard
             title="Performance"
             url="/shop#performance"
-            className="md:max-w-[684px] h-[190px] bg-[url('/images/dress-style-2.png')]"
+            className="md:max-w-[684px] h-[190px] bg-[url('/images/shoes-style-2.png')]"
           />
         </motion.div>
         <motion.div
@@ -48,12 +48,12 @@ const DressStyle = () => {
           <DressStyleCard
             title="Outdoor"
             url="/shop#outdoor"
-            className="md:max-w-[684px] h-[190px] bg-[url('/images/dress-style-3.png')]"
+            className="md:max-w-[684px] h-[190px] bg-[url('/images/shoes-style-3.png')]"
           />
           <DressStyleCard
             title="Formal"
             url="/shop#formal"
-            className="md:max-w-[260px] lg:max-w-[360px] xl:max-w-[407px] h-[190px] bg-[url('/images/dress-style-4.png')]"
+            className="md:max-w-[260px] lg:max-w-[360px] xl:max-w-[407px] h-[190px] bg-[url('/images/shoes-style-4.png')]"
           />
         </motion.div>
       </section>
