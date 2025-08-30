@@ -19,6 +19,7 @@ export const viewport: Viewport = {
   themeColor: "#000000",
 };
 
+// NOTE: For new pages, create a directory with a page.tsx file inside (e.g., /admin-dashboard/page.tsx)
 export default function RootLayout({
   children,
 }: Readonly<{

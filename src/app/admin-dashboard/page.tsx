@@ -1,8 +1,7 @@
-// Password-protected dashboard page for uploading images
 "use client";
 import React, { useState } from "react";
 
-export default function PasswordDashboard() {
+export default function AdminDashboard() {
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
@@ -37,7 +36,7 @@ export default function PasswordDashboard() {
         </form>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "center" }}>
-          <h2>Dashboard: Upload Images</h2>
+          <h2>Admin Dashboard: Add Images</h2>
           <input type="file" multiple accept="image/*" onChange={handleFileChange} />
           {selectedFiles && (
             <div style={{ marginTop: 16 }}>

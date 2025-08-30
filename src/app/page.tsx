@@ -210,9 +210,6 @@ export const reviewsData: Review[] = [
 export default function Home() {
   return (
     <>
-      <div style={{ position: "fixed", top: 10, right: 10, zIndex: 1000 }}>
-        <Link href="/password-dashboard" style={{ background: '#222', color: '#fff', padding: 8, borderRadius: 4, textDecoration: 'none' }}>Admin Dashboard</Link>
-      </div>
       <Header />
       <Brands />
       <main className="my-[50px] sm:my-[72px]">
