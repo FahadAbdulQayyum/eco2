@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ReviewCard from "@/components/common/ReviewCard";
-import { reviewsData } from "@/app/page";
+import { defaultReviewsData } from "@/lib/data/products";
 import Link from "next/link";
 
 const ReviewsContent = () => {
@@ -42,7 +42,7 @@ const ReviewsContent = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5 sm:mb-9">
-        {reviewsData.map((review) => (
+        {defaultReviewsData.map((review) => (
           <ReviewCard key={review.id} data={review} isAction isDate />
         ))}
       </div>
