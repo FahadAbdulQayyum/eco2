@@ -33,9 +33,12 @@ export default function RootLayout({
           <TopBanner />
           <Providers>
             <TopNavbar />
-            <nav className="w-full bg-gray-100 py-2 px-4 flex justify-end">
+            <nav className="w-full bg-gray-100 py-2 px-4 flex justify-end space-x-4">
               <Link href="/my-orders" className="text-sm font-medium hover:underline">
                 My Orders
+              </Link>
+              <Link href="/upload-demo" className="text-sm font-medium hover:underline">
+                Upload Demo
               </Link>
             </nav>
             {children}

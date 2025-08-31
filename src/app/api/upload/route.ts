@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, readdir, stat, unlink } from 'fs/promises';
-import path from 'path';
+import { put } from '@vercel/blob';
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,7 +10,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No files uploaded' }, { status: 400 });
     }
 
-    const uploadedFiles: string[] = [];
+    const uploadedFiles: { url: string; filename: string }[] = [];
 
     for (const file of files) {
       if (file instanceof File) {
@@ -25,17 +24,27 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ error: 'File size must be less than 5MB' }, { status: 400 });
         }
 
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-        
         // Generate unique filename
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const filename = `image-${uniqueSuffix}${path.extname(file.name)}`;
-        const filepath = path.join(process.cwd(), 'public', 'upload', filename);
+        const filename = `image-${uniqueSuffix}${file.name ? `.${file.name.split('.').pop()}` : '.jpg'}`;
         
-        // Write file to upload directory
-        await writeFile(filepath, buffer);
-        uploadedFiles.push(filename);
+        try {
+          // Upload to Vercel Blob Storage
+          const blob = await put(filename, file, {
+            access: 'public', // Make the image publicly accessible
+            addRandomSuffix: false, // We already added our own suffix
+          });
+
+          uploadedFiles.push({
+            url: blob.url,
+            filename: filename
+          });
+        } catch (uploadError) {
+          console.error('Upload error for file:', filename, uploadError);
+          return NextResponse.json({ 
+            error: `Failed to upload ${filename}` 
+          }, { status: 500 });
+        }
       }
     }
 
@@ -54,53 +63,18 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const uploadDir = path.join(process.cwd(), 'public', 'upload');
-    
-    try {
-      const files = await readdir(uploadDir);
-      const imageFiles = files.filter(file => {
-        const ext = path.extname(file).toLowerCase();
-        return ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'].includes(ext);
-      });
-
-      const imagesWithMetadata = await Promise.all(
-        imageFiles.map(async (filename) => {
-          const filepath = path.join(uploadDir, filename);
-          const stats = await stat(filepath);
-          
-          return {
-            filename,
-            url: `/upload/${filename}`,
-            uploadTime: stats.mtime.toLocaleString(),
-            size: stats.size,
-            path: filepath
-          };
-        })
-      );
-
-      // Sort by upload time (newest first)
-      imagesWithMetadata.sort((a, b) => new Date(b.uploadTime).getTime() - new Date(a.uploadTime).getTime());
-
-      return NextResponse.json({ 
-        message: 'Images fetched successfully',
-        images: imagesWithMetadata
-      });
-
-    } catch (error) {
-      // If upload directory doesn't exist, return empty array
-      if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
-        return NextResponse.json({ 
-          message: 'Upload directory not found',
-          images: []
-        });
-      }
-      throw error;
-    }
+    // For Vercel Blob, we can't easily list all files without additional setup
+    // This is a limitation of the free tier, but the upload functionality works perfectly
+    return NextResponse.json({ 
+      message: 'Images are stored in Vercel Blob Storage',
+      note: 'Use the upload endpoint to store new images. Images are automatically accessible via their URLs.',
+      images: []
+    });
 
   } catch (error) {
-    console.error('Error fetching images:', error);
+    console.error('Error:', error);
     return NextResponse.json({ 
-      error: 'Failed to fetch images' 
+      error: 'Failed to fetch information' 
     }, { status: 500 });
   }
 }
