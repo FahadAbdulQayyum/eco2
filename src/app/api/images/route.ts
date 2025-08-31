@@ -16,13 +16,26 @@ export async function GET(request: NextRequest) {
     });
 
     // Transform the blobs to match our expected format
-    const images = blobs.map(blob => ({
-      url: blob.url,
-      filename: blob.pathname.split('/').pop() || blob.pathname,
-      uploadedAt: blob.uploadedAt,
-      size: blob.size,
-      type: blob.contentType,
-    }));
+    const images = blobs.map(blob => {
+      const filename = blob.pathname.split('/').pop() || blob.pathname;
+      const extension = filename.split('.').pop()?.toLowerCase();
+      
+      // Derive content type from file extension
+      let contentType = 'application/octet-stream';
+      if (extension === 'jpg' || extension === 'jpeg') contentType = 'image/jpeg';
+      else if (extension === 'png') contentType = 'image/png';
+      else if (extension === 'gif') contentType = 'image/gif';
+      else if (extension === 'webp') contentType = 'image/webp';
+      else if (extension === 'svg') contentType = 'image/svg+xml';
+      
+      return {
+        url: blob.url,
+        filename: filename,
+        uploadedAt: blob.uploadedAt,
+        size: blob.size,
+        type: contentType,
+      };
+    });
 
     return NextResponse.json({
       images,
