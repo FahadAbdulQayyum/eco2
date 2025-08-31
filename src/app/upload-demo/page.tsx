@@ -9,6 +9,14 @@ interface UploadedImage {
   type?: string;
 }
 
+interface Review {
+  id: number;
+  user: string;
+  content: string;
+  rating: number;
+  date: string;
+}
+
 export default function UploadDemo() {
   // Add CSS animation for spinner
   React.useEffect(() => {
@@ -31,13 +39,47 @@ export default function UploadDemo() {
   const [uploading, setUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedImage[]>([]);
   const [uploadError, setUploadError] = useState<string>("");
-  const [currentView, setCurrentView] = useState<"main" | "upload" | "gallery">("main");
+  const [currentView, setCurrentView] = useState<"main" | "upload" | "gallery" | "reviews">("main");
   const [isLoading, setIsLoading] = useState(false);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [showAddReview, setShowAddReview] = useState(false);
+  const [newReview, setNewReview] = useState({
+    user: "",
+    content: "",
+    rating: 5,
+    date: new Date().toISOString().split('T')[0]
+  });
+
+  // Sample reviews data
+  const sampleReviews: Review[] = [
+    {
+      id: 1,
+      user: "Alex K.",
+      content: "Finding clothes that align with my personal style used to be a challenge until I discovered TAHIRZAI.CO. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.",
+      rating: 5,
+      date: "2024-01-15"
+    },
+    {
+      id: 2,
+      user: "Sarah M.",
+      content: "I'm blown away by the quality and comfort of the shoes I received from TAHIRZAI.CO. From lifestyle to performance pairs, every purchase has exceeded my expectations.",
+      rating: 5,
+      date: "2024-01-20"
+    },
+    {
+      id: 3,
+      user: "Ethan R.",
+      content: "These sneakers are a must-have for anyone who appreciates good design. The minimal yet stylish silhouette caught my eye, and the fit is perfect.",
+      rating: 4,
+      date: "2024-01-25"
+    }
+  ];
 
   // Fetch uploaded images on component mount and after uploads
   useEffect(() => {
     if (authenticated) {
       fetchUploadedImages();
+      setReviews(sampleReviews);
     }
   }, [authenticated]);
 
@@ -135,6 +177,32 @@ export default function UploadDemo() {
     }
   };
 
+  const handleAddReview = () => {
+    if (newReview.user.trim() && newReview.content.trim()) {
+      const review: Review = {
+        id: Date.now(),
+        user: newReview.user,
+        content: newReview.content,
+        rating: newReview.rating,
+        date: newReview.date
+      };
+      setReviews(prev => [...prev, review]);
+      setNewReview({
+        user: "",
+        content: "",
+        rating: 5,
+        date: new Date().toISOString().split('T')[0]
+      });
+      setShowAddReview(false);
+    }
+  };
+
+  const handleDeleteReview = (id: number) => {
+    if (confirm('Are you sure you want to delete this review?')) {
+      setReviews(prev => prev.filter(review => review.id !== id));
+    }
+  };
+
   if (!authenticated) {
     return (
       <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "20px" }}>
@@ -157,60 +225,245 @@ export default function UploadDemo() {
 
   if (currentView === "main") {
     return (
-      <div style={{ minHeight: "100vh", padding: "20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ maxWidth: 800, textAlign: "center" }}>
-          <h1 style={{ marginBottom: 40, fontSize: "2.5rem" }}>Upload Demo Dashboard</h1>
-          
-          <div style={{ display: "flex", gap: 40, justifyContent: "center", flexWrap: "wrap" }}>
-            <button 
-              onClick={() => setCurrentView("upload")}
-              style={{ 
-                padding: "30px 60px", 
-                fontSize: "1.5rem", 
-                background: "#007bff", 
-                color: "#fff", 
-                border: "none", 
-                borderRadius: 8, 
-                cursor: "pointer",
-                minWidth: 250,
-                boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
-              }}
-            >
-              Upload Images
-            </button>
-            
-            <button 
-              onClick={() => setCurrentView("gallery")}
-              style={{ 
-                padding: "30px 60px", 
-                fontSize: "1.5rem", 
-                background: "#28a745", 
-                color: "#fff", 
-                border: "none", 
-                borderRadius: 8, 
-                cursor: "pointer",
-                minWidth: 250,
-                boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
-              }}
-            >
-              Show All Images
-            </button>
+      <div style={{ minHeight: "100vh", padding: "20px", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "40px 20px" }}>
+          <div style={{ textAlign: "center", marginBottom: "60px" }}>
+            <h1 style={{ 
+              fontSize: "3.5rem", 
+              color: "#fff", 
+              marginBottom: "20px",
+              textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+              fontWeight: "bold"
+            }}>
+              🚀 Upload Demo Dashboard
+            </h1>
+            <p style={{ 
+              fontSize: "1.2rem", 
+              color: "rgba(255,255,255,0.9)",
+              maxWidth: "600px",
+              margin: "0 auto"
+            }}>
+              Manage your images and reviews with our powerful dashboard interface
+            </p>
           </div>
           
-          <button 
-            onClick={() => setAuthenticated(false)}
-            style={{ 
-              marginTop: 40,
-              padding: "10px 20px", 
-              background: "#6c757d", 
-              color: "#fff", 
-              border: "none", 
-              borderRadius: 4, 
-              cursor: "pointer"
+          <div style={{ 
+            display: "grid", 
+            gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", 
+            gap: "30px",
+            marginBottom: "50px"
+          }}>
+            {/* Upload Images Card */}
+            <div style={{ 
+              background: "rgba(255,255,255,0.95)", 
+              borderRadius: "20px", 
+              padding: "40px 30px",
+              textAlign: "center",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              transition: "transform 0.3s ease, box-shadow 0.3s ease"
             }}
-          >
-            Logout
-          </button>
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-10px)";
+              e.currentTarget.style.boxShadow = "0 30px 60px rgba(0,0,0,0.15)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 20px 40px rgba(0,0,0,0.1)";
+            }}
+            >
+              <div style={{ fontSize: "4rem", marginBottom: "20px" }}>📤</div>
+              <h3 style={{ fontSize: "1.8rem", marginBottom: "15px", color: "#2c3e50" }}>Upload Images</h3>
+              <p style={{ color: "#7f8c8d", marginBottom: "25px", lineHeight: "1.6" }}>
+                Upload multiple images to Vercel Blob storage with drag & drop support
+              </p>
+              <button 
+                onClick={() => setCurrentView("upload")}
+                style={{ 
+                  padding: "15px 30px", 
+                  fontSize: "1.1rem", 
+                  background: "linear-gradient(45deg, #007bff, #0056b3)", 
+                  color: "#fff", 
+                  border: "none", 
+                  borderRadius: "25px", 
+                  cursor: "pointer",
+                  fontWeight: "600",
+                  boxShadow: "0 8px 20px rgba(0,123,255,0.3)",
+                  transition: "all 0.3s ease"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)";
+                  e.currentTarget.style.boxShadow = "0 12px 25px rgba(0,123,255,0.4)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                  e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,123,255,0.3)";
+                }}
+              >
+                Get Started →
+              </button>
+            </div>
+
+            {/* Show All Images Card */}
+            <div style={{ 
+              background: "rgba(255,255,255,0.95)", 
+              borderRadius: "20px", 
+              padding: "40px 30px",
+              textAlign: "center",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              transition: "transform 0.3s ease, box-shadow 0.3s ease"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-10px)";
+              e.currentTarget.style.boxShadow = "0 30px 60px rgba(0,0,0,0.15)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 20px 40px rgba(0,0,0,0.1)";
+            }}
+            >
+              <div style={{ fontSize: "4rem", marginBottom: "20px" }}>🖼️</div>
+              <h3 style={{ fontSize: "1.8rem", marginBottom: "15px", color: "#2c3e50" }}>Show All Images</h3>
+              <p style={{ color: "#7f8c8d", marginBottom: "25px", lineHeight: "1.6" }}>
+                Browse and manage all uploaded images with preview and delete options
+              </p>
+              <button 
+                onClick={() => setCurrentView("gallery")}
+                style={{ 
+                  padding: "15px 30px", 
+                  fontSize: "1.1rem", 
+                  background: "linear-gradient(45deg, #28a745, #1e7e34)", 
+                  color: "#fff", 
+                  border: "none", 
+                  borderRadius: "25px", 
+                  cursor: "pointer",
+                  fontWeight: "600",
+                  boxShadow: "0 8px 20px rgba(40,167,69,0.3)",
+                  transition: "all 0.3s ease"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)";
+                  e.currentTarget.style.boxShadow = "0 12px 25px rgba(40,167,69,0.4)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                  e.currentTarget.style.boxShadow = "0 8px 20px rgba(40,167,69,0.3)";
+                }}
+              >
+                View Gallery →
+              </button>
+            </div>
+
+            {/* Add Reviews Card */}
+            <div style={{ 
+              background: "rgba(255,255,255,0.95)", 
+              borderRadius: "20px", 
+              padding: "40px 30px",
+              textAlign: "center",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              transition: "transform 0.3s ease, box-shadow 0.3s ease"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-10px)";
+              e.currentTarget.style.boxShadow = "0 30px 60px rgba(0,0,0,0.15)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 20px 40px rgba(0,0,0,0.1)";
+            }}
+            >
+              <div style={{ fontSize: "4rem", marginBottom: "20px" }}>⭐</div>
+              <h3 style={{ fontSize: "1.8rem", marginBottom: "15px", color: "#2c3e50" }}>Review Data</h3>
+              <p style={{ color: "#7f8c8d", marginBottom: "25px", lineHeight: "1.6" }}>
+                Manage customer reviews and ratings with a beautiful interface
+              </p>
+              <button 
+                onClick={() => setCurrentView("reviews")}
+                style={{ 
+                  padding: "15px 30px", 
+                  fontSize: "1.1rem", 
+                  background: "linear-gradient(45deg, #ff6b35, #f7931e)", 
+                  color: "#fff", 
+                  border: "none", 
+                  borderRadius: "25px", 
+                  cursor: "pointer",
+                  fontWeight: "600",
+                  boxShadow: "0 8px 20px rgba(255,107,53,0.3)",
+                  transition: "all 0.3s ease"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)";
+                  e.currentTarget.style.boxShadow = "0 12px 25px rgba(255,107,53,0.4)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                  e.currentTarget.style.boxShadow = "0 8px 20px rgba(255,107,53,0.3)";
+                }}
+              >
+                Manage Reviews →
+              </button>
+            </div>
+          </div>
+
+          {/* Stats Section */}
+          <div style={{ 
+            background: "rgba(255,255,255,0.1)", 
+            borderRadius: "20px", 
+            padding: "30px",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(255,255,255,0.2)"
+          }}>
+            <div style={{ 
+              display: "grid", 
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
+              gap: "20px",
+              textAlign: "center"
+            }}>
+              <div>
+                <div style={{ fontSize: "2.5rem", color: "#fff", fontWeight: "bold" }}>{uploadedFiles.length}</div>
+                <div style={{ color: "rgba(255,255,255,0.8)" }}>Total Images</div>
+              </div>
+              <div>
+                <div style={{ fontSize: "2.5rem", color: "#fff", fontWeight: "bold" }}>{reviews.length}</div>
+                <div style={{ color: "rgba(255,255,255,0.8)" }}>Total Reviews</div>
+              </div>
+              <div>
+                <div style={{ fontSize: "2.5rem", color: "#fff", fontWeight: "bold" }}>
+                  {reviews.length > 0 ? (reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length).toFixed(1) : "0"}
+                </div>
+                <div style={{ color: "rgba(255,255,255,0.8)" }}>Avg Rating</div>
+              </div>
+            </div>
+          </div>
+          
+          <div style={{ textAlign: "center", marginTop: "40px" }}>
+            <button 
+              onClick={() => setAuthenticated(false)}
+              style={{ 
+                padding: "12px 25px", 
+                background: "rgba(255,255,255,0.2)", 
+                color: "#fff", 
+                border: "1px solid rgba(255,255,255,0.3)", 
+                borderRadius: "25px", 
+                cursor: "pointer",
+                backdropFilter: "blur(10px)",
+                transition: "all 0.3s ease"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.2)";
+              }}
+            >
+              🔓 Logout
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -406,6 +659,284 @@ export default function UploadDemo() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (currentView === "reviews") {
+    return (
+      <div style={{ minHeight: "100vh", padding: "20px", background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "30px" }}>
+            <h1 style={{ color: "#fff", fontSize: "2.5rem", textShadow: "2px 2px 4px rgba(0,0,0,0.3)" }}>
+              ⭐ Review Management Dashboard
+            </h1>
+            <div style={{ display: "flex", gap: "15px" }}>
+              <button 
+                onClick={() => setShowAddReview(!showAddReview)}
+                style={{ 
+                  padding: "12px 20px", 
+                  background: "rgba(255,255,255,0.2)", 
+                  color: "#fff", 
+                  border: "1px solid rgba(255,255,255,0.3)", 
+                  borderRadius: "25px", 
+                  cursor: "pointer",
+                  backdropFilter: "blur(10px)",
+                  transition: "all 0.3s ease"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255,255,255,0.3)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(255,255,255,0.2)";
+                }}
+              >
+                {showAddReview ? "Cancel" : "➕ Add Review"}
+              </button>
+              <button 
+                onClick={() => setCurrentView("main")}
+                style={{ 
+                  padding: "12px 20px", 
+                  background: "rgba(255,255,255,0.2)", 
+                  color: "#fff", 
+                  border: "1px solid rgba(255,255,255,0.3)", 
+                  borderRadius: "25px", 
+                  cursor: "pointer",
+                  backdropFilter: "blur(10px)",
+                  transition: "all 0.3s ease"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255,255,255,0.3)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(255,255,255,0.2)";
+                }}
+              >
+                ← Back to Main
+              </button>
+            </div>
+          </div>
+
+          {/* Add Review Form */}
+          {showAddReview && (
+            <div style={{ 
+              background: "rgba(255,255,255,0.95)", 
+              borderRadius: "20px", 
+              padding: "30px",
+              marginBottom: "30px",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
+              backdropFilter: "blur(10px)"
+            }}>
+              <h3 style={{ fontSize: "1.5rem", marginBottom: "20px", color: "#2c3e50" }}>Add New Review</h3>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "20px", marginBottom: "20px" }}>
+                <div>
+                  <label style={{ display: "block", marginBottom: "8px", color: "#2c3e50", fontWeight: "600" }}>User Name</label>
+                  <input
+                    type="text"
+                    value={newReview.user}
+                    onChange={(e) => setNewReview(prev => ({ ...prev, user: e.target.value }))}
+                    placeholder="Enter user name"
+                    style={{
+                      width: "100%",
+                      padding: "12px",
+                      border: "2px solid #e1e8ed",
+                      borderRadius: "10px",
+                      fontSize: "16px",
+                      transition: "border-color 0.3s ease"
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = "#667eea"}
+                    onBlur={(e) => e.target.style.borderColor = "#e1e8ed"}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: "block", marginBottom: "8px", color: "#2c3e50", fontWeight: "600" }}>Rating</label>
+                  <select
+                    value={newReview.rating}
+                    onChange={(e) => setNewReview(prev => ({ ...prev, rating: parseInt(e.target.value) }))}
+                    style={{
+                      width: "100%",
+                      padding: "12px",
+                      border: "2px solid #e1e8ed",
+                      borderRadius: "10px",
+                      fontSize: "16px",
+                      transition: "border-color 0.3s ease"
+                    }}
+                  >
+                    <option value={5}>⭐⭐⭐⭐⭐ 5 Stars</option>
+                    <option value={4}>⭐⭐⭐⭐ 4 Stars</option>
+                    <option value={3}>⭐⭐⭐ 3 Stars</option>
+                    <option value={2}>⭐⭐ 2 Stars</option>
+                    <option value={1}>⭐ 1 Star</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: "block", marginBottom: "8px", color: "#2c3e50", fontWeight: "600" }}>Date</label>
+                  <input
+                    type="date"
+                    value={newReview.date}
+                    onChange={(e) => setNewReview(prev => ({ ...prev, date: e.target.value }))}
+                    style={{
+                      width: "100%",
+                      padding: "12px",
+                      border: "2px solid #e1e8ed",
+                      borderRadius: "10px",
+                      fontSize: "16px",
+                      transition: "border-color 0.3s ease"
+                    }}
+                  />
+                </div>
+              </div>
+              <div>
+                <label style={{ display: "block", marginBottom: "8px", color: "#2c3e50", fontWeight: "600" }}>Review Content</label>
+                <textarea
+                  value={newReview.content}
+                  onChange={(e) => setNewReview(prev => ({ ...prev, content: e.target.value }))}
+                  placeholder="Enter review content..."
+                  rows={4}
+                  style={{
+                    width: "100%",
+                    padding: "12px",
+                    border: "2px solid #e1e8ed",
+                    borderRadius: "10px",
+                    fontSize: "16px",
+                    resize: "vertical",
+                    transition: "border-color 0.3s ease"
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = "#667eea"}
+                  onBlur={(e) => e.target.style.borderColor = "#e1e8ed"}
+                />
+              </div>
+              <button
+                onClick={handleAddReview}
+                disabled={!newReview.user.trim() || !newReview.content.trim()}
+                style={{
+                  marginTop: "20px",
+                  padding: "15px 30px",
+                  background: "linear-gradient(45deg, #667eea, #764ba2)",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "25px",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  boxShadow: "0 8px 20px rgba(102,126,234,0.3)",
+                  transition: "all 0.3s ease",
+                  opacity: (!newReview.user.trim() || !newReview.content.trim()) ? 0.6 : 1
+                }}
+                onMouseEnter={(e) => {
+                  if (newReview.user.trim() && newReview.content.trim()) {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 12px 25px rgba(102,126,234,0.4)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 8px 20px rgba(102,126,234,0.3)";
+                }}
+              >
+                ✨ Add Review
+              </button>
+            </div>
+          )}
+
+          {/* Reviews Grid */}
+          <div style={{ 
+            display: "grid", 
+            gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))", 
+            gap: "25px"
+          }}>
+            {reviews.map((review) => (
+              <div key={review.id} style={{ 
+                background: "rgba(255,255,255,0.95)", 
+                borderRadius: "20px", 
+                padding: "25px",
+                boxShadow: "0 15px 35px rgba(0,0,0,0.1)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255,255,255,0.2)",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-5px)";
+                e.currentTarget.style.boxShadow = "0 20px 40px rgba(0,0,0,0.15)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 15px 35px rgba(0,0,0,0.1)";
+              }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "15px" }}>
+                  <div>
+                    <h4 style={{ fontSize: "1.3rem", color: "#2c3e50", marginBottom: "5px" }}>{review.user}</h4>
+                    <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i} style={{ fontSize: "1.2rem" }}>
+                          {i < review.rating ? "⭐" : "☆"}
+                        </span>
+                      ))}
+                      <span style={{ marginLeft: "10px", color: "#7f8c8d", fontSize: "0.9rem" }}>
+                        {review.rating}/5
+                      </span>
+                    </div>
+                  </div>
+                  <span style={{ 
+                    color: "#7f8c8d", 
+                    fontSize: "0.9rem",
+                    background: "rgba(127,140,141,0.1)",
+                    padding: "5px 10px",
+                    borderRadius: "15px"
+                  }}>
+                    {new Date(review.date).toLocaleDateString()}
+                  </span>
+                </div>
+                <p style={{ 
+                  color: "#34495e", 
+                  lineHeight: "1.6", 
+                  marginBottom: "20px",
+                  fontSize: "1rem"
+                }}>
+                  "{review.content}"
+                </p>
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <button
+                    onClick={() => handleDeleteReview(review.id)}
+                    style={{
+                      padding: "8px 15px",
+                      background: "linear-gradient(45deg, #e74c3c, #c0392b)",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "20px",
+                      cursor: "pointer",
+                      fontSize: "0.9rem",
+                      transition: "all 0.3s ease"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "scale(1.05)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "scale(1)";
+                    }}
+                  >
+                    🗑️ Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {reviews.length === 0 && (
+            <div style={{ 
+              textAlign: "center", 
+              padding: "60px 20px",
+              background: "rgba(255,255,255,0.1)",
+              borderRadius: "20px",
+              backdropFilter: "blur(10px)"
+            }}>
+              <div style={{ fontSize: "4rem", marginBottom: "20px" }}>📝</div>
+              <h3 style={{ color: "#fff", fontSize: "1.5rem", marginBottom: "10px" }}>No Reviews Yet</h3>
+              <p style={{ color: "rgba(255,255,255,0.8)" }}>Start adding reviews to build your customer feedback system</p>
             </div>
           )}
         </div>
