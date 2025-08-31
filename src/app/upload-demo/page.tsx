@@ -4,10 +4,27 @@ import React, { useState, useEffect } from "react";
 interface UploadedImage {
   filename: string;
   url: string;
-  uploadTime: string;
+  uploadedAt: string;
+  size?: number;
+  type?: string;
 }
 
 export default function UploadDemo() {
+  // Add CSS animation for spinner
+  React.useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
@@ -15,6 +32,7 @@ export default function UploadDemo() {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedImage[]>([]);
   const [uploadError, setUploadError] = useState<string>("");
   const [currentView, setCurrentView] = useState<"main" | "upload" | "gallery">("main");
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch uploaded images on component mount and after uploads
   useEffect(() => {
@@ -25,13 +43,18 @@ export default function UploadDemo() {
 
   const fetchUploadedImages = async () => {
     try {
-      const response = await fetch('/api/upload');
+      setIsLoading(true);
+      const response = await fetch('/api/images?limit=100');
       if (response.ok) {
         const data = await response.json();
         setUploadedFiles(data.images || []);
+      } else {
+        console.error('Failed to fetch images:', response.statusText);
       }
     } catch (error) {
       console.error('Error fetching images:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -95,7 +118,7 @@ export default function UploadDemo() {
   const handleDeleteImage = async (filename: string) => {
     if (confirm(`Are you sure you want to delete ${filename}?`)) {
       try {
-        const response = await fetch(`/api/upload/${filename}`, {
+        const response = await fetch(`/api/images?filename=${encodeURIComponent(filename)}`, {
           method: 'DELETE',
         });
 
@@ -269,22 +292,50 @@ export default function UploadDemo() {
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 30 }}>
             <h1>Image Gallery ({uploadedFiles.length} images)</h1>
-            <button 
-              onClick={() => setCurrentView("main")}
-              style={{ 
-                padding: "10px 20px", 
-                background: "#6c757d", 
-                color: "#fff", 
-                border: "none", 
-                borderRadius: 4, 
-                cursor: "pointer" 
-              }}
-            >
-              Back to Main
-            </button>
+            <div style={{ display: "flex", gap: 10 }}>
+              <button 
+                onClick={fetchUploadedImages}
+                style={{ 
+                  padding: "10px 20px", 
+                  background: "#17a2b8", 
+                  color: "#fff", 
+                  border: "none", 
+                  borderRadius: 4, 
+                  cursor: "pointer" 
+                }}
+              >
+                Refresh
+              </button>
+              <button 
+                onClick={() => setCurrentView("main")}
+                style={{ 
+                  padding: "10px 20px", 
+                  background: "#6c757d", 
+                  color: "#fff", 
+                  border: "none", 
+                  borderRadius: 4, 
+                  cursor: "pointer" 
+                }}
+              >
+                Back to Main
+              </button>
+            </div>
           </div>
 
-          {uploadedFiles.length === 0 ? (
+          {isLoading ? (
+            <div style={{ textAlign: "center", padding: "40px" }}>
+              <div style={{ 
+                display: "inline-block",
+                width: "40px", 
+                height: "40px", 
+                border: "4px solid #f3f3f3",
+                borderTop: "4px solid #007bff",
+                borderRadius: "50%",
+                animation: "spin 1s linear infinite"
+              }}></div>
+              <p style={{ marginTop: "20px", color: "#666" }}>Loading images...</p>
+            </div>
+          ) : uploadedFiles.length === 0 ? (
             <p style={{ textAlign: "center", color: "#666" }}>No images uploaded yet.</p>
           ) : (
             <div style={{ 
@@ -319,9 +370,9 @@ export default function UploadDemo() {
                   }}>
                     {image.filename}
                   </p>
-                  <p style={{ fontSize: 11, color: "#999", margin: "5px 0" }}>
-                    {image.uploadTime}
-                  </p>
+                                      <p style={{ fontSize: 11, color: "#999", margin: "5px 0" }}>
+                      {new Date(image.uploadedAt).toLocaleDateString()}
+                    </p>
                   <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 10 }}>
                     <a 
                       href={image.url} 
