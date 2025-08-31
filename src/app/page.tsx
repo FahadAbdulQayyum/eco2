@@ -1,3 +1,4 @@
+"use client";
 import ProductListSec from "@/components/common/ProductListSec";
 import Brands from "@/components/homepage/Brands";
 import DressStyle from "@/components/homepage/DressStyle";
@@ -7,6 +8,7 @@ import Reviews from "@/components/homepage/Reviews";
 import { Product } from "@/types/product.types";
 import { Review } from "@/types/review.types";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 export const newArrivalsData: Product[] = [
   {
@@ -206,9 +208,6 @@ export const defaultReviewsData: Review[] = [
     date: "August 19, 2023",
   },
 ];
-
-"use client";
-import { useState, useEffect } from "react";
 
 export default function Home() {
   const [reviews, setReviews] = useState<Review[]>(defaultReviewsData);
