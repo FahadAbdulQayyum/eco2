@@ -14,9 +14,37 @@ const MAX_STORAGE_SIZE = 5 * 1024 * 1024; // 5MB limit for localStorage
 export const useImageStorage = () => {
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Load images from localStorage
-  const loadImages = useCallback(() => {
+  // Fetch images from Vercel Blob API
+  const fetchImagesFromBlob = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const response = await fetch('/api/images?limit=100');
+      if (!response.ok) {
+        throw new Error('Failed to fetch images from Vercel Blob');
+      }
+      
+      const data = await response.json();
+      if (data.images && Array.isArray(data.images)) {
+        setImages(data.images);
+        // Also save to localStorage as backup
+        saveImagesToLocalStorage(data.images);
+      }
+    } catch (error) {
+      console.error('Error fetching images from Vercel Blob:', error);
+      setError(error instanceof Error ? error.message : 'Failed to fetch images');
+      // Fallback to localStorage if API fails
+      loadImagesFromLocalStorage();
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Load images from localStorage (fallback)
+  const loadImagesFromLocalStorage = useCallback(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
@@ -26,16 +54,13 @@ export const useImageStorage = () => {
         }
       }
     } catch (error) {
-      console.error('Error loading images from storage:', error);
-      // Clear corrupted data
+      console.error('Error loading images from localStorage:', error);
       localStorage.removeItem(STORAGE_KEY);
-    } finally {
-      setIsLoading(false);
     }
   }, []);
 
   // Save images to localStorage with size checking
-  const saveImages = useCallback((newImages: UploadedImage[]) => {
+  const saveImagesToLocalStorage = useCallback((newImages: UploadedImage[]) => {
     try {
       const dataString = JSON.stringify(newImages);
       const dataSize = new Blob([dataString]).size;
@@ -45,17 +70,15 @@ export const useImageStorage = () => {
         // Keep only the most recent images to fit within storage limit
         const recentImages = newImages.slice(-50); // Keep last 50 images
         localStorage.setItem(STORAGE_KEY, JSON.stringify(recentImages));
-        setImages(recentImages);
       } else {
         localStorage.setItem(STORAGE_KEY, dataString);
-        setImages(newImages);
       }
     } catch (error) {
-      console.error('Error saving images to storage:', error);
+      console.error('Error saving images to localStorage:', error);
     }
   }, []);
 
-  // Add new images
+  // Add new images (both to state and localStorage)
   const addImages = useCallback((newImages: { url: string; filename: string }[]) => {
     const imagesWithMetadata = newImages.map(img => ({
       ...img,
@@ -64,19 +87,19 @@ export const useImageStorage = () => {
     
     setImages(prev => {
       const updated = [...prev, ...imagesWithMetadata];
-      saveImages(updated);
+      saveImagesToLocalStorage(updated);
       return updated;
     });
-  }, [saveImages]);
+  }, [saveImagesToLocalStorage]);
 
   // Remove an image by index
   const removeImage = useCallback((index: number) => {
     setImages(prev => {
       const updated = prev.filter((_, i) => i !== index);
-      saveImages(updated);
+      saveImagesToLocalStorage(updated);
       return updated;
     });
-  }, [saveImages]);
+  }, [saveImagesToLocalStorage]);
 
   // Remove all images
   const clearAllImages = useCallback(() => {
@@ -97,19 +120,26 @@ export const useImageStorage = () => {
     return images.some(img => img.url === url);
   }, [images]);
 
-  // Load images on mount
+  // Refresh images from Vercel Blob
+  const refreshImages = useCallback(() => {
+    fetchImagesFromBlob();
+  }, [fetchImagesFromBlob]);
+
+  // Load images on mount - fetch from Vercel Blob first
   useEffect(() => {
-    loadImages();
-  }, [loadImages]);
+    fetchImagesFromBlob();
+  }, [fetchImagesFromBlob]);
 
   return {
     images,
     isLoading,
+    error,
     addImages,
     removeImage,
     clearAllImages,
     getImageCount,
     getRecentImages,
     imageExists,
+    refreshImages,
   };
 };

@@ -7,27 +7,34 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { useImageStorage } from '@/lib/hooks/useImageStorage';
+import { RefreshCw } from 'lucide-react';
 
 export default function UploadDemoPage() {
   const [showAllImages, setShowAllImages] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   
   const {
     images,
     isLoading,
+    error: fetchError,
     addImages,
     removeImage,
     clearAllImages,
     getImageCount,
+    refreshImages,
   } = useImageStorage();
 
   const handleUploadSuccess = (files: { url: string; filename: string }[]) => {
     addImages(files);
-    setError(null);
+    setUploadError(null);
+    // Refresh images from Vercel Blob after successful upload
+    setTimeout(() => {
+      refreshImages();
+    }, 1000); // Small delay to ensure upload is processed
   };
 
   const handleUploadError = (errorMessage: string) => {
-    setError(errorMessage);
+    setUploadError(errorMessage);
   };
 
   const copyToClipboard = (url: string) => {
@@ -44,7 +51,7 @@ export default function UploadDemoPage() {
       <div className="container mx-auto py-8 px-4 max-w-4xl">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading your images...</p>
+          <p className="mt-4 text-gray-600">Fetching images from Vercel Blob...</p>
         </div>
       </div>
     );
@@ -59,22 +66,49 @@ export default function UploadDemoPage() {
         </p>
       </div>
 
-      {/* Show All Images Button */}
+      {/* Error Display */}
+      {fetchError && (
+        <Card className="mb-6 border-red-200 bg-red-50">
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <p className="text-red-600 mb-2">Error fetching images from Vercel Blob:</p>
+              <p className="text-red-500 text-sm mb-3">{fetchError}</p>
+              <Button onClick={refreshImages} variant="outline" size="sm">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Retry
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Show All Images Button and Refresh */}
       {getImageCount() > 0 && (
         <Card className="mb-6">
           <CardContent className="pt-6">
-            <div className="text-center">
+            <div className="flex items-center justify-between">
+              <div className="text-center flex-1">
+                <Button
+                  onClick={toggleShowAllImages}
+                  variant={showAllImages ? "outline" : "default"}
+                  size="lg"
+                  className="px-8"
+                >
+                  {showAllImages ? 'Hide All Images' : `Show All Uploaded Images (${getImageCount()})`}
+                </Button>
+                <p className="text-sm text-gray-600 mt-2">
+                  {showAllImages ? 'Click to hide all previously uploaded images' : 'Click to view all images you have uploaded'}
+                </p>
+              </div>
               <Button
-                onClick={toggleShowAllImages}
-                variant={showAllImages ? "outline" : "default"}
-                size="lg"
-                className="px-8"
+                onClick={refreshImages}
+                variant="outline"
+                size="sm"
+                className="ml-4"
               >
-                {showAllImages ? 'Hide All Images' : `Show All Uploaded Images (${getImageCount()})`}
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refresh
               </Button>
-              <p className="text-sm text-gray-600 mt-2">
-                {showAllImages ? 'Click to hide all previously uploaded images' : 'Click to view all images you have uploaded'}
-              </p>
             </div>
           </CardContent>
         </Card>
@@ -84,7 +118,7 @@ export default function UploadDemoPage() {
         <CardHeader>
           <CardTitle>Upload Images</CardTitle>
           <CardDescription>
-            Drag and drop images here or click to select. Images will be stored in Vercel Blob Storage.
+            Drag and drop images here or click to select. Images will be stored in Vercel Blob Storage and fetched from there.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -95,9 +129,9 @@ export default function UploadDemoPage() {
             maxSize={5}
           />
           
-          {error && (
+          {uploadError && (
             <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-red-600 text-sm">{error}</p>
+              <p className="text-red-600 text-sm">{uploadError}</p>
             </div>
           )}
         </CardContent>
@@ -107,8 +141,8 @@ export default function UploadDemoPage() {
       {showAllImages && getImageCount() > 0 && (
         <ImageGallery
           images={images}
-          title="All Uploaded Images"
-          description="Your images are now stored in Vercel Blob Storage and accessible worldwide"
+          title="All Images from Vercel Blob"
+          description="Your images are now stored in Vercel Blob Storage and fetched from there"
           showUploadDate={true}
           showActions={true}
           onRemoveImage={removeImage}
@@ -122,8 +156,8 @@ export default function UploadDemoPage() {
       {!showAllImages && getImageCount() > 0 && (
         <ImageGallery
           images={images}
-          title="Recently Uploaded"
-          description="Your most recent uploads (click 'Show All Images' above to see all)"
+          title="Recently Uploaded from Vercel Blob"
+          description="Your most recent uploads fetched from Vercel Blob Storage (click 'Show All Images' above to see all)"
           showUploadDate={true}
           showActions={true}
           onRemoveImage={removeImage}
@@ -144,7 +178,7 @@ export default function UploadDemoPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center p-4 border rounded-lg">
               <div className="text-2xl font-bold text-blue-600 mb-2">1</div>
               <h3 className="font-semibold mb-2">Upload</h3>
@@ -161,6 +195,13 @@ export default function UploadDemoPage() {
             </div>
             <div className="text-center p-4 border rounded-lg">
               <div className="text-2xl font-bold text-purple-600 mb-2">3</div>
+              <h3 className="font-semibold mb-2">Fetch</h3>
+              <p className="text-sm text-gray-600">
+                Images are fetched from Vercel Blob via the API endpoint
+              </p>
+            </div>
+            <div className="text-center p-4 border rounded-lg">
+              <div className="text-2xl font-bold text-orange-600 mb-2">4</div>
               <h3 className="font-semibold mb-2">Serve</h3>
               <p className="text-sm text-gray-600">
                 Images are served via global CDN for fast loading worldwide
@@ -169,8 +210,20 @@ export default function UploadDemoPage() {
           </div>
           
           <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <h4 className="font-semibold text-blue-900 mb-2">Benefits:</h4>
+            <h4 className="font-semibold text-blue-900 mb-2">New Features:</h4>
             <ul className="text-sm text-blue-800 space-y-1">
+              <li>• Images are now fetched from Vercel Blob Storage</li>
+              <li>• Real-time synchronization with cloud storage</li>
+              <li>• Automatic refresh after uploads</li>
+              <li>• Fallback to localStorage if API fails</li>
+              <li>• Manual refresh button for manual updates</li>
+              <li>• Better error handling and user feedback</li>
+            </ul>
+          </div>
+
+          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <h4 className="font-semibold text-green-900 mb-2">Benefits:</h4>
+            <ul className="text-sm text-green-800 space-y-1">
               <li>• 100GB free storage per month</li>
               <li>• Global CDN for fast image delivery</li>
               <li>• No credit card required</li>

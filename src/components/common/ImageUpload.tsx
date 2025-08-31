@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import SpinnerbLoader from '@/components/ui/SpinnerbLoader';
+import { CheckCircle } from 'lucide-react';
 
 interface ImageUploadProps {
   onUploadSuccess: (files: { url: string; filename: string }[]) => void;
@@ -20,12 +21,14 @@ export default function ImageUpload({
   maxSize = 5
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
   const [dragActive, setDragActive] = useState(false);
 
   const handleUpload = async (files: FileList | File[]) => {
     if (!files || files.length === 0) return;
 
     setIsUploading(true);
+    setUploadSuccess(false);
 
     try {
       const formData = new FormData();
@@ -55,6 +58,10 @@ export default function ImageUpload({
 
       const result = await response.json();
       onUploadSuccess(result.files);
+      setUploadSuccess(true);
+      
+      // Reset success message after 3 seconds
+      setTimeout(() => setUploadSuccess(false), 3000);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Upload failed';
       onUploadError?.(errorMessage);
@@ -95,6 +102,8 @@ export default function ImageUpload({
         className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
           dragActive
             ? 'border-blue-500 bg-blue-50'
+            : uploadSuccess
+            ? 'border-green-500 bg-green-50'
             : 'border-gray-300 hover:border-gray-400'
         }`}
         onDragEnter={handleDrag}
@@ -115,7 +124,12 @@ export default function ImageUpload({
           {isUploading ? (
             <div className="flex items-center justify-center space-x-2">
               <SpinnerbLoader />
-              <span className="text-sm text-gray-600">Uploading...</span>
+              <span className="text-sm text-gray-600">Uploading to Vercel Blob...</span>
+            </div>
+          ) : uploadSuccess ? (
+            <div className="flex items-center justify-center space-x-2 text-green-600">
+              <CheckCircle className="w-5 h-5" />
+              <span className="text-sm font-medium">Successfully uploaded to Vercel Blob!</span>
             </div>
           ) : (
             <>
@@ -125,6 +139,9 @@ export default function ImageUpload({
                 </p>
                 <p className="text-xs mt-1">
                   Maximum file size: {maxSize}MB
+                </p>
+                <p className="text-xs mt-1 text-blue-600">
+                  Images will be stored in Vercel Blob Storage
                 </p>
               </div>
               
