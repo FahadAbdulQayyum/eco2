@@ -2,21 +2,27 @@
 
 import { useState } from 'react';
 import ImageUpload from '@/components/common/ImageUpload';
+import ImageGallery from '@/components/common/ImageGallery';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-
-interface UploadedFile {
-  url: string;
-  filename: string;
-}
+import { useImageStorage } from '@/lib/hooks/useImageStorage';
 
 export default function UploadDemoPage() {
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [showAllImages, setShowAllImages] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const {
+    images,
+    isLoading,
+    addImages,
+    removeImage,
+    clearAllImages,
+    getImageCount,
+  } = useImageStorage();
 
-  const handleUploadSuccess = (files: UploadedFile[]) => {
-    setUploadedFiles(prev => [...prev, ...files]);
+  const handleUploadSuccess = (files: { url: string; filename: string }[]) => {
+    addImages(files);
     setError(null);
   };
 
@@ -24,19 +30,25 @@ export default function UploadDemoPage() {
     setError(errorMessage);
   };
 
-  const handleRemoveFile = (index: number) => {
-    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const handleClearAll = () => {
-    setUploadedFiles([]);
-    setError(null);
-  };
-
   const copyToClipboard = (url: string) => {
     navigator.clipboard.writeText(url);
     // You could add a toast notification here
   };
+
+  const toggleShowAllImages = () => {
+    setShowAllImages(!showAllImages);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto py-8 px-4 max-w-4xl">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading your images...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">
@@ -46,6 +58,27 @@ export default function UploadDemoPage() {
           Test your image upload functionality with Vercel Blob Storage
         </p>
       </div>
+
+      {/* Show All Images Button */}
+      {getImageCount() > 0 && (
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <Button
+                onClick={toggleShowAllImages}
+                variant={showAllImages ? "outline" : "default"}
+                size="lg"
+                className="px-8"
+              >
+                {showAllImages ? 'Hide All Images' : `Show All Uploaded Images (${getImageCount()})`}
+              </Button>
+              <p className="text-sm text-gray-600 mt-2">
+                {showAllImages ? 'Click to hide all previously uploaded images' : 'Click to view all images you have uploaded'}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Card className="mb-6">
         <CardHeader>
@@ -70,68 +103,35 @@ export default function UploadDemoPage() {
         </CardContent>
       </Card>
 
-      {uploadedFiles.length > 0 && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Uploaded Images ({uploadedFiles.length})</CardTitle>
-                <CardDescription>
-                  Your images are now stored in Vercel Blob Storage and accessible worldwide
-                </CardDescription>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleClearAll}
-              >
-                Clear All
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {uploadedFiles.map((file, index) => (
-                <div key={index} className="border rounded-lg overflow-hidden">
-                  <div className="aspect-square bg-gray-100">
-                    <img
-                      src={file.url}
-                      alt={file.filename}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik04MCAxMDBDODAgODkuNTQ4NyA4OC4wNDg3IDgxIDk4IDgxQzEwNy45NTEgODEgMTE2IDg5LjA0ODcgMTE2IDEwMEMxMTYgMTEwLjk1MSAxMDcuOTUxIDExOSA5OCAxMTlDODguMDQ4NyAxMTkgODAgMTEwLjk1MSA4MCAxMDBaIiBmaWxsPSIjOUI5QkEwIi8+CjxwYXRoIGQ9Ik0xMDAgMTQwQzExMC45NTEgMTQwIDEyMCAxMzAuOTUxIDEyMCAxMjBMMTIwIDExMEMxMjAgOTkuMDQ4NyAxMTAuOTUxIDkwIDEwMCA5MEM4OS4wNDg3IDkwIDgwIDk5LjA0ODcgODAgMTEwTDgwIDEyMEM4MCAxMzAuOTUxIDg5LjA0ODcgMTQwIDEwMCAxNDBaIiBmaWxsPSIjOUI5QkEwIi8+Cjwvc3ZnPgo=';
-                      }}
-                    />
-                  </div>
-                  <div className="p-3">
-                    <p className="text-sm font-medium text-gray-900 truncate mb-2">
-                      {file.filename}
-                    </p>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => copyToClipboard(file.url)}
-                        className="flex-1"
-                      >
-                        Copy URL
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleRemoveFile(index)}
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+      {/* Display All Uploaded Images */}
+      {showAllImages && getImageCount() > 0 && (
+        <ImageGallery
+          images={images}
+          title="All Uploaded Images"
+          description="Your images are now stored in Vercel Blob Storage and accessible worldwide"
+          showUploadDate={true}
+          showActions={true}
+          onRemoveImage={removeImage}
+          onCopyUrl={copyToClipboard}
+          onClearAll={clearAllImages}
+          className="mb-6"
+        />
+      )}
+
+      {/* Show Recently Uploaded Images (if not showing all) */}
+      {!showAllImages && getImageCount() > 0 && (
+        <ImageGallery
+          images={images}
+          title="Recently Uploaded"
+          description="Your most recent uploads (click 'Show All Images' above to see all)"
+          showUploadDate={true}
+          showActions={true}
+          onRemoveImage={removeImage}
+          onCopyUrl={copyToClipboard}
+          onClearAll={clearAllImages}
+          maxDisplay={3}
+          className="mb-6"
+        />
       )}
 
       <Separator className="my-8" />
@@ -176,6 +176,9 @@ export default function UploadDemoPage() {
               <li>• No credit card required</li>
               <li>• Seamless Vercel integration</li>
               <li>• Automatic scaling and reliability</li>
+              <li>• Images persist across project restarts</li>
+              <li>• Smart localStorage management</li>
+              <li>• Reusable image gallery component</li>
             </ul>
           </div>
         </CardContent>
