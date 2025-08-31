@@ -266,7 +266,7 @@ export default function UploadDemo() {
   }
 
   if (currentView === "main") {
-    return (
+  return (
       <div style={{ minHeight: "100vh", padding: "20px", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "40px 20px" }}>
           <div style={{ textAlign: "center", marginBottom: "60px" }}>
@@ -286,9 +286,9 @@ export default function UploadDemo() {
               margin: "0 auto"
             }}>
               Manage your images and reviews with our powerful dashboard interface
-            </p>
-          </div>
-          
+        </p>
+      </div>
+
           <div style={{ 
             display: "grid", 
             gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", 
@@ -507,7 +507,7 @@ export default function UploadDemo() {
             </button>
           </div>
         </div>
-      </div>
+              </div>
     );
   }
 
@@ -530,7 +530,7 @@ export default function UploadDemo() {
             >
               Back to Main
             </button>
-          </div>
+            </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 20, alignItems: "center", marginBottom: 40 }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 16, width: "100%", maxWidth: 600, alignItems: "center" }}>
@@ -568,12 +568,12 @@ export default function UploadDemo() {
                   </button>
                 </div>
               )}
-
-              {uploadError && (
+          
+          {uploadError && (
                 <div style={{ color: "red", textAlign: "center" }}>
                   {uploadError}
-                </div>
-              )}
+            </div>
+          )}
             </div>
           </div>
         </div>
@@ -921,8 +921,8 @@ export default function UploadDemo() {
                       <span style={{ marginLeft: "10px", color: "#7f8c8d", fontSize: "0.9rem" }}>
                         {review.rating}/5
                       </span>
-                    </div>
-                  </div>
+            </div>
+            </div>
                   <span style={{ 
                     color: "#7f8c8d", 
                     fontSize: "0.9rem",
@@ -932,7 +932,7 @@ export default function UploadDemo() {
                   }}>
                     {new Date(review.date).toLocaleDateString()}
                   </span>
-                </div>
+            </div>
                 <p style={{ 
                   color: "#34495e", 
                   lineHeight: "1.6", 
@@ -963,8 +963,8 @@ export default function UploadDemo() {
                   >
                     🗑️ Delete
                   </button>
-                </div>
-              </div>
+            </div>
+          </div>
             ))}
           </div>
 
@@ -981,9 +981,9 @@ export default function UploadDemo() {
               <p style={{ color: "rgba(255,255,255,0.8)" }}>Start adding reviews to build your customer feedback system</p>
             </div>
           )}
-        </div>
-      </div>
-    );
+          </div>
+    </div>
+  );
   }
 
   return null;
