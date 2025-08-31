@@ -1,241 +1,366 @@
-'use client';
+"use client";
+import React, { useState, useEffect } from "react";
 
-import { useState } from 'react';
-import ImageUpload from '@/components/common/ImageUpload';
-import ImageGallery from '@/components/common/ImageGallery';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { useImageStorage } from '@/lib/hooks/useImageStorage';
-import { RefreshCw } from 'lucide-react';
+interface UploadedImage {
+  filename: string;
+  url: string;
+  uploadTime: string;
+}
 
-export default function UploadDemoPage() {
-  const [showAllImages, setShowAllImages] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  
-  const {
-    images,
-    isLoading,
-    error: fetchError,
-    addImages,
-    removeImage,
-    clearAllImages,
-    getImageCount,
-    refreshImages,
-  } = useImageStorage();
+export default function UploadDemo() {
+  const [password, setPassword] = useState("");
+  const [authenticated, setAuthenticated] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedImage[]>([]);
+  const [uploadError, setUploadError] = useState<string>("");
+  const [currentView, setCurrentView] = useState<"main" | "upload" | "gallery">("main");
 
-  const handleUploadSuccess = (files: { url: string; filename: string }[]) => {
-    addImages(files);
-    setUploadError(null);
-    // Refresh images from Vercel Blob after successful upload
-    setTimeout(() => {
-      refreshImages();
-    }, 1000); // Small delay to ensure upload is processed
+  // Fetch uploaded images on component mount and after uploads
+  useEffect(() => {
+    if (authenticated) {
+      fetchUploadedImages();
+    }
+  }, [authenticated]);
+
+  const fetchUploadedImages = async () => {
+    try {
+      const response = await fetch('/api/upload');
+      if (response.ok) {
+        const data = await response.json();
+        setUploadedFiles(data.images || []);
+      }
+    } catch (error) {
+      console.error('Error fetching images:', error);
+    }
   };
 
-  const handleUploadError = (errorMessage: string) => {
-    setUploadError(errorMessage);
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === "iamfahad") {
+      setAuthenticated(true);
+    } else {
+      alert("Incorrect password!");
+    }
   };
 
-  const copyToClipboard = (url: string) => {
-    navigator.clipboard.writeText(url);
-    // You could add a toast notification here
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedFiles(e.target.files);
+    setUploadError("");
   };
 
-  const toggleShowAllImages = () => {
-    setShowAllImages(!showAllImages);
+  const handleUpload = async () => {
+    if (!selectedFiles || selectedFiles.length === 0) {
+      setUploadError("Please select files to upload");
+      return;
+    }
+
+    setUploading(true);
+    setUploadError("");
+
+    try {
+      const formData = new FormData();
+      
+      // Add all selected files to form data
+      Array.from(selectedFiles).forEach((file) => {
+        formData.append('images', file);
+      });
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Refresh the uploaded images list
+        await fetchUploadedImages();
+        setSelectedFiles(null);
+        // Reset file input
+        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
+        setCurrentView("main");
+      } else {
+        setUploadError(result.error || 'Upload failed');
+      }
+    } catch (error) {
+      setUploadError('Upload failed. Please try again.');
+      console.error('Upload error:', error);
+    } finally {
+      setUploading(false);
+    }
   };
 
-  if (isLoading) {
+  const handleDeleteImage = async (filename: string) => {
+    if (confirm(`Are you sure you want to delete ${filename}?`)) {
+      try {
+        const response = await fetch(`/api/upload/${filename}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          // Remove from local state and refresh
+          setUploadedFiles(prev => prev.filter(img => img.filename !== filename));
+        } else {
+          alert('Failed to delete image');
+        }
+      } catch (error) {
+        console.error('Delete error:', error);
+        alert('Error deleting image');
+      }
+    }
+  };
+
+  if (!authenticated) {
     return (
-      <div className="container mx-auto py-8 px-4 max-w-4xl">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Fetching images from Vercel Blob...</p>
+      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+        <form onSubmit={handlePasswordSubmit} style={{ display: "flex", flexDirection: "column", gap: 16, width: 300 }}>
+          <h2 style={{ textAlign: "center", marginBottom: 20 }}>Upload Demo Login</h2>
+          <input
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            style={{ padding: 12, fontSize: 16, borderRadius: 4, border: "1px solid #ccc" }}
+          />
+          <button type="submit" style={{ padding: 12, fontSize: 16, background: "#222", color: "#fff", border: "none", borderRadius: 4, cursor: "pointer" }}>
+            Login
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  if (currentView === "main") {
+    return (
+      <div style={{ minHeight: "100vh", padding: "20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ maxWidth: 800, textAlign: "center" }}>
+          <h1 style={{ marginBottom: 40, fontSize: "2.5rem" }}>Upload Demo Dashboard</h1>
+          
+          <div style={{ display: "flex", gap: 40, justifyContent: "center", flexWrap: "wrap" }}>
+            <button 
+              onClick={() => setCurrentView("upload")}
+              style={{ 
+                padding: "30px 60px", 
+                fontSize: "1.5rem", 
+                background: "#007bff", 
+                color: "#fff", 
+                border: "none", 
+                borderRadius: 8, 
+                cursor: "pointer",
+                minWidth: 250,
+                boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
+              }}
+            >
+              Upload Images
+            </button>
+            
+            <button 
+              onClick={() => setCurrentView("gallery")}
+              style={{ 
+                padding: "30px 60px", 
+                fontSize: "1.5rem", 
+                background: "#28a745", 
+                color: "#fff", 
+                border: "none", 
+                borderRadius: 8, 
+                cursor: "pointer",
+                minWidth: 250,
+                boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
+              }}
+            >
+              Show All Images
+            </button>
+          </div>
+          
+          <button 
+            onClick={() => setAuthenticated(false)}
+            style={{ 
+              marginTop: 40,
+              padding: "10px 20px", 
+              background: "#6c757d", 
+              color: "#fff", 
+              border: "none", 
+              borderRadius: 4, 
+              cursor: "pointer"
+            }}
+          >
+            Logout
+          </button>
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="container mx-auto py-8 px-4 max-w-4xl">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold mb-2">Vercel Blob Storage Demo</h1>
-        <p className="text-gray-600">
-          Test your image upload functionality with Vercel Blob Storage
-        </p>
+  if (currentView === "upload") {
+    return (
+      <div style={{ minHeight: "100vh", padding: "20px" }}>
+        <div style={{ maxWidth: 800, margin: "0 auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 30 }}>
+            <h1>Upload Images</h1>
+            <button 
+              onClick={() => setCurrentView("main")}
+              style={{ 
+                padding: "10px 20px", 
+                background: "#6c757d", 
+                color: "#fff", 
+                border: "none", 
+                borderRadius: 4, 
+                cursor: "pointer" 
+              }}
+            >
+              Back to Main
+            </button>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 20, alignItems: "center", marginBottom: 40 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16, width: "100%", maxWidth: 600, alignItems: "center" }}>
+              <input 
+                type="file" 
+                multiple 
+                accept="image/*" 
+                onChange={handleFileChange}
+                style={{ padding: 8 }}
+              />
+              
+              {selectedFiles && selectedFiles.length > 0 && (
+                <div style={{ textAlign: "center" }}>
+                  <h4>Selected Images ({selectedFiles.length}):</h4>
+                  <ul style={{ listStyle: "none", padding: 0 }}>
+                    {Array.from(selectedFiles).map((file, idx) => (
+                      <li key={idx} style={{ margin: "4px 0" }}>{file.name}</li>
+                    ))}
+                  </ul>
+                  <button 
+                    onClick={handleUpload}
+                    disabled={uploading}
+                    style={{ 
+                      padding: "12px 24px", 
+                      fontSize: 16, 
+                      background: uploading ? "#ccc" : "#007bff", 
+                      color: "#fff", 
+                      border: "none", 
+                      borderRadius: 4, 
+                      cursor: uploading ? "not-allowed" : "pointer",
+                      marginTop: 16
+                    }}
+                  >
+                    {uploading ? "Uploading..." : "Upload Images"}
+                  </button>
+                </div>
+              )}
+
+              {uploadError && (
+                <div style={{ color: "red", textAlign: "center" }}>
+                  {uploadError}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
+    );
+  }
 
-      {/* Error Display */}
-      {fetchError && (
-        <Card className="mb-6 border-red-200 bg-red-50">
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <p className="text-red-600 mb-2">Error fetching images from Vercel Blob:</p>
-              <p className="text-red-500 text-sm mb-3">{fetchError}</p>
-              <Button onClick={refreshImages} variant="outline" size="sm">
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Retry
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+  if (currentView === "gallery") {
+    return (
+      <div style={{ minHeight: "100vh", padding: "20px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 30 }}>
+            <h1>Image Gallery ({uploadedFiles.length} images)</h1>
+            <button 
+              onClick={() => setCurrentView("main")}
+              style={{ 
+                padding: "10px 20px", 
+                background: "#6c757d", 
+                color: "#fff", 
+                border: "none", 
+                borderRadius: 4, 
+                cursor: "pointer" 
+              }}
+            >
+              Back to Main
+            </button>
+          </div>
 
-      {/* Show All Images Button and Refresh */}
-      {getImageCount() > 0 && (
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div className="text-center flex-1">
-                <Button
-                  onClick={toggleShowAllImages}
-                  variant={showAllImages ? "outline" : "default"}
-                  size="lg"
-                  className="px-8"
-                >
-                  {showAllImages ? 'Hide All Images' : `Show All Uploaded Images (${getImageCount()})`}
-                </Button>
-                <p className="text-sm text-gray-600 mt-2">
-                  {showAllImages ? 'Click to hide all previously uploaded images' : 'Click to view all images you have uploaded'}
-                </p>
-              </div>
-              <Button
-                onClick={refreshImages}
-                variant="outline"
-                size="sm"
-                className="ml-4"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Refresh
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Upload Images</CardTitle>
-          <CardDescription>
-            Drag and drop images here or click to select. Images will be stored in Vercel Blob Storage and fetched from there.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ImageUpload
-            onUploadSuccess={handleUploadSuccess}
-            onUploadError={handleUploadError}
-            multiple={true}
-            maxSize={5}
-          />
-          
-          {uploadError && (
-            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-red-600 text-sm">{uploadError}</p>
+          {uploadedFiles.length === 0 ? (
+            <p style={{ textAlign: "center", color: "#666" }}>No images uploaded yet.</p>
+          ) : (
+            <div style={{ 
+              display: "grid", 
+              gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", 
+              gap: 20,
+              marginTop: 20
+            }}>
+              {uploadedFiles.map((image) => (
+                <div key={image.filename} style={{ 
+                  border: "1px solid #ddd", 
+                  borderRadius: 8, 
+                  padding: 15,
+                  textAlign: "center"
+                }}>
+                  <img 
+                    src={image.url} 
+                    alt={image.filename}
+                    style={{ 
+                      width: "100%", 
+                      height: 200, 
+                      objectFit: "cover", 
+                      borderRadius: 4,
+                      marginBottom: 10
+                    }}
+                  />
+                  <p style={{ 
+                    fontSize: 12, 
+                    color: "#666", 
+                    margin: "5px 0",
+                    wordBreak: "break-word"
+                  }}>
+                    {image.filename}
+                  </p>
+                  <p style={{ fontSize: 11, color: "#999", margin: "5px 0" }}>
+                    {image.uploadTime}
+                  </p>
+                  <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 10 }}>
+                    <a 
+                      href={image.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      style={{ 
+                        padding: "5px 10px", 
+                        background: "#007bff", 
+                        color: "#fff", 
+                        textDecoration: "none", 
+                        borderRadius: 4,
+                        fontSize: 12
+                      }}
+                    >
+                      View
+                    </a>
+                    <button 
+                      onClick={() => handleDeleteImage(image.filename)}
+                      style={{ 
+                        padding: "5px 10px", 
+                        background: "#dc3545", 
+                        color: "#fff", 
+                        border: "none", 
+                        borderRadius: 4,
+                        cursor: "pointer",
+                        fontSize: 12
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+    );
+  }
 
-      {/* Display All Uploaded Images */}
-      {showAllImages && getImageCount() > 0 && (
-        <ImageGallery
-          images={images}
-          title="All Images from Vercel Blob"
-          description="Your images are now stored in Vercel Blob Storage and fetched from there"
-          showUploadDate={true}
-          showActions={true}
-          onRemoveImage={removeImage}
-          onCopyUrl={copyToClipboard}
-          onClearAll={clearAllImages}
-          className="mb-6"
-        />
-      )}
-
-      {/* Show Recently Uploaded Images (if not showing all) */}
-      {!showAllImages && getImageCount() > 0 && (
-        <ImageGallery
-          images={images}
-          title="Recently Uploaded from Vercel Blob"
-          description="Your most recent uploads fetched from Vercel Blob Storage (click 'Show All Images' above to see all)"
-          showUploadDate={true}
-          showActions={true}
-          onRemoveImage={removeImage}
-          onCopyUrl={copyToClipboard}
-          onClearAll={clearAllImages}
-          maxDisplay={3}
-          className="mb-6"
-        />
-      )}
-
-      <Separator className="my-8" />
-
-      <Card>
-        <CardHeader>
-          <CardTitle>How It Works</CardTitle>
-          <CardDescription>
-            Understanding the Vercel Blob Storage integration
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-blue-600 mb-2">1</div>
-              <h3 className="font-semibold mb-2">Upload</h3>
-              <p className="text-sm text-gray-600">
-                Images are uploaded to Vercel Blob Storage via the API
-              </p>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-green-600 mb-2">2</div>
-              <h3 className="font-semibold mb-2">Store</h3>
-              <p className="text-sm text-gray-600">
-                Images are securely stored in Vercel's global infrastructure
-              </p>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-purple-600 mb-2">3</div>
-              <h3 className="font-semibold mb-2">Fetch</h3>
-              <p className="text-sm text-gray-600">
-                Images are fetched from Vercel Blob via the API endpoint
-              </p>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-orange-600 mb-2">4</div>
-              <h3 className="font-semibold mb-2">Serve</h3>
-              <p className="text-sm text-gray-600">
-                Images are served via global CDN for fast loading worldwide
-              </p>
-            </div>
-          </div>
-          
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <h4 className="font-semibold text-blue-900 mb-2">New Features:</h4>
-            <ul className="text-sm text-blue-800 space-y-1">
-              <li>• Images are now fetched from Vercel Blob Storage</li>
-              <li>• Real-time synchronization with cloud storage</li>
-              <li>• Automatic refresh after uploads</li>
-              <li>• Fallback to localStorage if API fails</li>
-              <li>• Manual refresh button for manual updates</li>
-              <li>• Better error handling and user feedback</li>
-            </ul>
-          </div>
-
-          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <h4 className="font-semibold text-green-900 mb-2">Benefits:</h4>
-            <ul className="text-sm text-green-800 space-y-1">
-              <li>• 100GB free storage per month</li>
-              <li>• Global CDN for fast image delivery</li>
-              <li>• No credit card required</li>
-              <li>• Seamless Vercel integration</li>
-              <li>• Automatic scaling and reliability</li>
-              <li>• Images persist across project restarts</li>
-              <li>• Smart localStorage management</li>
-              <li>• Reusable image gallery component</li>
-            </ul>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
+  return null;
 }

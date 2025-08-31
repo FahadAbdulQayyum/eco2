@@ -37,9 +37,6 @@ export default function RootLayout({
               <Link href="/my-orders" className="text-sm font-medium hover:underline">
                 My Orders
               </Link>
-              <Link href="/upload-demo" className="text-sm font-medium hover:underline">
-                Upload Demo
-              </Link>
             </nav>
             {children}
           </Providers>
