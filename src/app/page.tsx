@@ -3,6 +3,7 @@ import ProductListSec from "@/components/common/ProductListSec";
 import Brands from "@/components/homepage/Brands";
 import DressStyle from "@/components/homepage/DressStyle";
 import ShoesStyle from "@/components/homepage/ShoesStyle";
+import WatchStyle from "@/components/homepage/WatchStyle";
 import Header from "@/components/homepage/Header";
 import Reviews from "@/components/homepage/Reviews";
 import { Review } from "@/types/review.types";
@@ -59,6 +60,9 @@ export default function Home() {
         </div>
         <div className="mb-[50px] sm:mb-20">
           <DressStyle />
+        </div>
+        <div className="mb-[50px] sm:mb-20">
+          <WatchStyle />
         </div>
         <Reviews data={reviews} />
       </main>
