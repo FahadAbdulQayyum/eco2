@@ -19,5 +19,26 @@
     "content": "These sneakers are a must-have for anyone who appreciates good design. The minimal yet stylish silhouette caught my eye, and the fit is perfect.",
     "rating": 4,
     "date": "2024-01-25"
+  },
+  {
+    "id": 4,
+    "user": "Wajo Qatari.",
+    "content": "As a UI/UX enthusiast, I value simplicity and functionality. These shoes represent those principles and feel great to wear. The attention to detail is outstanding.",
+    "rating": 5,
+    "date": "August 17, 2023"
+  },
+  {
+    "id": 5,
+    "user": "John Philiiphines.",
+    "content": "These shoes are a fusion of comfort and creativity. The cushioning is plush, and the design speaks volumes about the brand's craft. It's like wearing a piece of art.",
+    "rating": 5,
+    "date": "August 18, 2023"
+  },
+  {
+    "id": 6,
+    "user": "Tamim D.",
+    "content": "I absolutely love these shoes! The design is unique and they feel so comfortable. As a designer, I appreciate the attention to detail. They've become my daily go-to.",
+    "rating": 5,
+    "date": "August 19, 2023"
   }
 ]
