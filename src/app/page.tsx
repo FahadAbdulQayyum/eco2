@@ -164,7 +164,7 @@ export const relatedProductData: Product[] = [
 export const reviewsData: Review[] = [
   {
     id: 1,
-    user: "Alex K.",
+    user: "Tahir Al Balushi.",
     content:
       '"Finding clothes that align with my personal style used to be a challenge until I discovered TAHIRZAI.CO. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.”',
     rating: 5,
@@ -172,35 +172,35 @@ export const reviewsData: Review[] = [
   },
   {
     id: 2,
-    user: "Sarah M.",
+    user: "Abdullah Al Tahir.",
     content: `"I'm blown away by the quality and comfort of the shoes I received from TAHIRZAI.CO. From lifestyle to performance pairs, every purchase has exceeded my expectations.”`,
     rating: 5,
     date: "August 15, 2023",
   },
   {
     id: 3,
-    user: "Ethan R.",
+    user: "Khalil Al Balushi.",
     content: `"These sneakers are a must-have for anyone who appreciates good design. The minimal yet stylish silhouette caught my eye, and the fit is perfect."`,
     rating: 5,
     date: "August 16, 2023",
   },
   {
     id: 4,
-    user: "Olivia P.",
+    user: "Wajo Qatari.",
     content: `"As a UI/UX enthusiast, I value simplicity and functionality. These shoes represent those principles and feel great to wear. The attention to detail is outstanding."`,
     rating: 5,
     date: "August 17, 2023",
   },
   {
     id: 5,
-    user: "Liam K.",
+    user: "John Philiiphines.",
     content: `"These shoes are a fusion of comfort and creativity. The cushioning is plush, and the design speaks volumes about the brand's craft. It's like wearing a piece of art."`,
     rating: 5,
     date: "August 18, 2023",
   },
   {
     id: 6,
-    user: "Samantha D.",
+    user: "Tamim D.",
     content: `"I absolutely love these shoes! The design is unique and they feel so comfortable. As a designer, I appreciate the attention to detail. They've become my daily go-to."`,
     rating: 5,
     date: "August 19, 2023",
