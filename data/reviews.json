@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "user": "Tahir Al Balushi",
+    "content": "Finding clothes that align with my personal style used to be a challenge until I discovered TAHIRZAI.CO. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.",
+    "rating": 5,
+    "date": "2024-01-15"
+  },
+  {
+    "id": 2,
+    "user": "Abdullah Al Tahir",
+    "content": "I'm blown away by the quality and comfort of the shoes I received from TAHIRZAI.CO. From lifestyle to performance pairs, every purchase has exceeded my expectations.",
+    "rating": 5,
+    "date": "2024-01-20"
+  },
+  {
+    "id": 3,
+    "user": "Khalil Al Balushi",
+    "content": "These sneakers are a must-have for anyone who appreciates good design. The minimal yet stylish silhouette caught my eye, and the fit is perfect.",
+    "rating": 4,
+    "date": "2024-01-25"
+  }
+]

@@ -161,7 +161,7 @@ export const relatedProductData: Product[] = [
   },
 ];
 
-export const reviewsData: Review[] = [
+export const defaultReviewsData: Review[] = [
   {
     id: 1,
     user: "Tahir Al Balushi.",
@@ -207,7 +207,34 @@ export const reviewsData: Review[] = [
   },
 ];
 
+"use client";
+import { useState, useEffect } from "react";
+
 export default function Home() {
+  const [reviews, setReviews] = useState<Review[]>(defaultReviewsData);
+  const [isLoadingReviews, setIsLoadingReviews] = useState(true);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch('/api/reviews');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.reviews && data.reviews.length > 0) {
+            setReviews(data.reviews);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+        // Keep default reviews if API fails
+      } finally {
+        setIsLoadingReviews(false);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
   return (
     <>
       <Header />
@@ -234,7 +261,7 @@ export default function Home() {
         <div className="mb-[50px] sm:mb-20">
           <DressStyle />
         </div>
-        <Reviews data={reviewsData} />
+        <Reviews data={reviews} />
       </main>
     </>
   );

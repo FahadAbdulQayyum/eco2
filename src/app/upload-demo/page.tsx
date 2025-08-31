@@ -79,7 +79,7 @@ export default function UploadDemo() {
   useEffect(() => {
     if (authenticated) {
       fetchUploadedImages();
-      setReviews(sampleReviews);
+      fetchReviews();
     }
   }, [authenticated]);
 
@@ -177,29 +177,71 @@ export default function UploadDemo() {
     }
   };
 
-  const handleAddReview = () => {
+  const handleAddReview = async () => {
     if (newReview.user.trim() && newReview.content.trim()) {
-      const review: Review = {
-        id: Date.now(),
-        user: newReview.user,
-        content: newReview.content,
-        rating: newReview.rating,
-        date: newReview.date
-      };
-      setReviews(prev => [...prev, review]);
-      setNewReview({
-        user: "",
-        content: "",
-        rating: 5,
-        date: new Date().toISOString().split('T')[0]
-      });
-      setShowAddReview(false);
+      try {
+        const response = await fetch('/api/reviews', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newReview),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          // Refresh reviews from API
+          await fetchReviews();
+          setNewReview({
+            user: "",
+            content: "",
+            rating: 5,
+            date: new Date().toISOString().split('T')[0]
+          });
+          setShowAddReview(false);
+        } else {
+          const error = await response.json();
+          alert(`Failed to add review: ${error.error}`);
+        }
+      } catch (error) {
+        console.error('Error adding review:', error);
+        alert('Failed to add review. Please try again.');
+      }
     }
   };
 
-  const handleDeleteReview = (id: number) => {
+  const handleDeleteReview = async (id: number) => {
     if (confirm('Are you sure you want to delete this review?')) {
-      setReviews(prev => prev.filter(review => review.id !== id));
+      try {
+        const response = await fetch(`/api/reviews?id=${id}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          // Refresh reviews from API
+          await fetchReviews();
+        } else {
+          const error = await response.json();
+          alert(`Failed to delete review: ${error.error}`);
+        }
+      } catch (error) {
+        console.error('Error deleting review:', error);
+        alert('Failed to delete review. Please try again.');
+      }
+    }
+  };
+
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch('/api/reviews');
+      if (response.ok) {
+        const data = await response.json();
+        setReviews(data.reviews || []);
+      } else {
+        console.error('Failed to fetch reviews:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
     }
   };
 
