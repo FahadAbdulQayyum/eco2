@@ -71,7 +71,7 @@ const Footer = () => {
               <h1
                 className={cn([
                   integralCF.className,
-                  "text-[28px] lg:text-[32px] mb-6",
+                  "flex text-[28px] lg:text-[32px] mb-6",
                 ])}
               >
                 TAHiRZAi<p className="text-red-500 text-4xl">.</p>CO
