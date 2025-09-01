@@ -101,7 +101,7 @@ export default function CartPage() {
                 <div className="flex flex-col space-y-5">
                   <div className="flex items-center justify-between">
                     <span className="md:text-xl text-black/60">Subtotal</span>
-                    <span className="md:text-xl font-bold">${totalPrice}</span>
+                    <span className="md:text-xl font-bold">QR {totalPrice}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="md:text-xl text-black/60">
@@ -112,7 +112,7 @@ export default function CartPage() {
                       %)
                     </span>
                     <span className="md:text-xl font-bold text-red-600">
-                      -${Math.round(totalPrice - adjustedTotalPrice)}
+                      -QAR {Math.round(totalPrice - adjustedTotalPrice)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -125,7 +125,7 @@ export default function CartPage() {
                   <div className="flex items-center justify-between">
                     <span className="md:text-xl text-black">Total</span>
                     <span className="text-xl md:text-2xl font-bold">
-                      ${Math.round(adjustedTotalPrice)}
+                      QAR {Math.round(adjustedTotalPrice)}
                     </span>
                   </div>
                 </div>

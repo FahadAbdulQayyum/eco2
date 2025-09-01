@@ -31,7 +31,7 @@ export default function MyOrdersPage() {
           {userOrders.map((order) => (
             <div key={order.id} className="border rounded-lg p-4">
               <div className="mb-2 text-sm text-gray-400">Order Date: {new Date(order.createdAt).toLocaleString()}</div>
-              <div className="mb-2 font-semibold">Total: ${order.total}</div>
+              <div className="mb-2 font-semibold">Total: QAR {order.total}</div>
               <div className="mb-2">Card: **** **** **** {order.cardInfo.cardNumber.slice(-4)}</div>
               <div>
                 <table className="w-full text-left border-t mt-2">
@@ -48,7 +48,7 @@ export default function MyOrdersPage() {
                       <tr key={product.id + product.name}>
                         <td className="py-1">{product.name}</td>
                         <td className="py-1">{product.quantity}</td>
-                        <td className="py-1">${product.price}</td>
+                        <td className="py-1">QR {product.price}</td>
                         <td className="py-1">{product.attributes.join(", ")}</td>
                       </tr>
                     ))}

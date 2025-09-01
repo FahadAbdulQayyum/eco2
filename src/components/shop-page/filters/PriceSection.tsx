@@ -31,10 +31,10 @@ const PriceSection = () => {
             min={0}
             max={250}
             step={1}
-            label="$"
+            label="QAR"
           />
           <div className="mt-3 text-sm text-gray-600">
-            ${priceRange[0]} - ${priceRange[1]}
+            QAR {priceRange[0]} - QAR {priceRange[1]}
           </div>
         </AccordionContent>
       </AccordionItem>

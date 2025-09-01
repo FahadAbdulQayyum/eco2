@@ -154,6 +154,57 @@ export const relatedProductData: Product[] = [
   },
 ];
 
+export const dressStyleData: Product[] = [
+  {
+    id: 12,
+    title: "Shirt - 00",
+    srcUrl: "/imgs/pic12.png",
+    gallery: ["/imgs/pic12.png", "/imgs/pic10.png", "/imgs/pic11.png"],
+    price: 242,
+    discount: {
+      amount: 0,
+      percentage: 20,
+    },
+    rating: 4.0,
+  },
+  {
+    id: 13,
+    title: "Shirt - 01",
+    srcUrl: "/imgs/pic13.png",
+    gallery: ["/imgs/pic13.png", "/imgs/pic10.png", "/imgs/pic11.png"],
+    price: 145,
+    discount: {
+      amount: 0,
+      percentage: 0,
+    },
+    rating: 3.5,
+  },
+  {
+    id: 14,
+    title: "Shirt - 02",
+    srcUrl: "/imgs/pic14.png",
+    gallery: ["/imgs/pic14.png"],
+    price: 180,
+    discount: {
+      amount: 0,
+      percentage: 0,
+    },
+    rating: 4.5,
+  },
+  {
+    id: 15,
+    title: "Shirt - 03",
+    srcUrl: "/imgs/pic15.png",
+    gallery: ["/imgs/pic15.png"],
+    price: 150,
+    discount: {
+      amount: 0,
+      percentage: 30,
+    },
+    rating: 5.0,
+  },
+];
+
 export const defaultReviewsData: Review[] = [
   {
     id: 1,
