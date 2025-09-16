@@ -18,6 +18,12 @@ export interface Product {
 }
 
 
+export type Discount = {
+  amount: number;
+  percentage: number;
+};
+
+
 
 
 
