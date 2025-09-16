@@ -34,6 +34,9 @@ const shopSlice = createSlice({
   reducers: {
     setCategory: (state, action: PayloadAction<string | null>) => {
       state.filters.category = action.payload;
+      // Reset filtered products when category changes
+      state.filteredProducts = [];
+      state.isFiltered = false;
     },
     setColors: (state, action: PayloadAction<string[]>) => {
       state.filters.colors = action.payload;
@@ -52,7 +55,7 @@ const shopSlice = createSlice({
     },
     setFilteredProducts: (state, action: PayloadAction<any[]>) => {
       state.filteredProducts = action.payload;
-      state.isFiltered = true;
+      state.isFiltered = action.payload.length > 0;
     },
     clearFilters: (state) => {
       state.filters = initialState.filters;

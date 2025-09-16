@@ -18,7 +18,7 @@ const DressStyle = () => {
             "text-[32px] leading-[36px] md:text-5xl mb-8 md:mb-14 capitalize",
           ])}
         >
-          BROWSE BY WATCHES STYLE
+          BROWSE BY WATCH STYLE
         </motion.h2>
         <motion.div
           initial={{ y: "100px", opacity: 0 }}
@@ -29,12 +29,12 @@ const DressStyle = () => {
         >
           <DressStyleCard
             title="Lifestyle"
-            url="/shop#lifestyle"
+            url="/shop?category=watches&style=lifestyle"
             className="md:max-w-[260px] lg:max-w-[360px] xl:max-w-[407px] h-[190px] bg-[url('/images/watch-style-1.jpg')] duration-300 hover:scale-105"
           />
           <DressStyleCard
             title="Performance"
-            url="/shop#performance"
+            url="/shop?category=watches&style=performance"
             className="md:max-w-[684px] h-[190px] bg-[url('/images/watch-style-2.jpg')] duration-300 hover:scale-105"
           />
         </motion.div>
@@ -47,12 +47,12 @@ const DressStyle = () => {
         >
           <DressStyleCard
             title="Outdoor"
-            url="/shop#outdoor"
+            url="/shop?category=watches&style=outdoor"
             className="md:max-w-[684px] h-[190px] bg-[url('/images/watch-style-3.jpg')] duration-300 hover:scale-105"
           />
           <DressStyleCard
             title="Formal"
-            url="/shop#formal"
+            url="/shop?category=watches&style=formal"
             className="md:max-w-[260px] lg:max-w-[360px] xl:max-w-[407px] h-[190px] bg-[url('/images/watch-style-4.jpg')] duration-300 hover:scale-105"
           />
         </motion.div>

@@ -8,7 +8,7 @@ import Header from "@/components/homepage/Header";
 import Reviews from "@/components/homepage/Reviews";
 import { Review } from "@/types/review.types";
 import { useState, useEffect } from "react";
-import { newArrivalsData, topSellingData, defaultReviewsData } from "@/lib/data/products";
+import { newArrivalsData, topSellingData, defaultReviewsData, dressStyleData, watchesData } from "@/lib/data/products";
 
 export default function Home() {
   const [reviews, setReviews] = useState<Review[]>(defaultReviewsData);
@@ -41,7 +41,7 @@ export default function Home() {
       <Brands />
       <main className="my-[50px] sm:my-[72px]">
         <ProductListSec
-          title="NEW SHOE ARRIVALS"
+          title="NEW ARRIVALS"
           data={newArrivalsData}
           viewAllLink="/shop#new-arrivals"
         />
@@ -50,7 +50,7 @@ export default function Home() {
         </div>
         <div className="mb-[50px] sm:mb-20">
           <ProductListSec
-            title="top selling shoes"
+            title="TOP SELLING"
             data={topSellingData}
             viewAllLink="/shop#top-selling"
           />

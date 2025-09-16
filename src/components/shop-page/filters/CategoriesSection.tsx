@@ -13,29 +13,19 @@ type Category = {
 
 const categoriesData: Category[] = [
   {
-    title: "Sneakers",
-    slug: "/shop?category=sneakers",
-    value: "sneakers",
+    title: "Shoes",
+    slug: "/shop?category=shoes",
+    value: "shoes",
   },
   {
-    title: "Running Shoes",
-    slug: "/shop?category=running",
-    value: "running",
+    title: "Shirts",
+    slug: "/shop?category=clothes",
+    value: "clothes",
   },
   {
-    title: "Casual Shoes",
-    slug: "/shop?category=casual",
-    value: "casual",
-  },
-  {
-    title: "Formal Shoes",
-    slug: "/shop?category=formal",
-    value: "formal",
-  },
-  {
-    title: "Boots",
-    slug: "/shop?category=boots",
-    value: "boots",
+    title: "Watches",
+    slug: "/shop?category=watches",
+    value: "watches",
   },
 ];
 

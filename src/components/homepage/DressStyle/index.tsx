@@ -29,12 +29,12 @@ const DressStyle = () => {
         >
           <DressStyleCard
             title="Lifestyle"
-            url="/shop#lifestyle"
+            url="/shop?category=clothes&style=lifestyle"
             className="md:max-w-[260px] lg:max-w-[360px] xl:max-w-[407px] h-[190px] bg-[url('/images/dress-style-1.png')] duration-300 hover:scale-105"
           />
           <DressStyleCard
             title="Performance"
-            url="/shop#performance"
+            url="/shop?category=clothes&style=performance"
             className="md:max-w-[684px] h-[190px] bg-[url('/images/dress-style-2.png')] duration-300 hover:scale-105"
           />
         </motion.div>
@@ -47,12 +47,12 @@ const DressStyle = () => {
         >
           <DressStyleCard
             title="Outdoor"
-            url="/shop#outdoor"
+            url="/shop?category=clothes&style=outdoor"
             className="md:max-w-[684px] h-[190px] bg-[url('/images/dress-style-3.png')] duration-300 hover:scale-105"
           />
           <DressStyleCard
             title="Formal"
-            url="/shop#formal"
+            url="/shop?category=clothes&style=formal"
             className="md:max-w-[260px] lg:max-w-[360px] xl:max-w-[407px] h-[190px] bg-[url('/images/dress-style-4.png')] duration-300 hover:scale-105"
           />
         </motion.div>
