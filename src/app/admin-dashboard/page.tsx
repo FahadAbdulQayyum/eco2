@@ -542,7 +542,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
 export default function AdminDashboard() {
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
-  const [activeTab, setActiveTab] = useState<'upload' | 'gallery' | 'products'>('upload');
+  const [activeTab, setActiveTab] = useState<'upload' | 'gallery' | 'products' | 'productList'>('upload');
   
   // Product form state
   const [formData, setFormData] = useState<Partial<ProductFormData>>(defaultProductFormValues);
@@ -557,13 +557,20 @@ export default function AdminDashboard() {
   
   // Gallery state
   const [showGallery, setShowGallery] = useState(false);
+  
+  // Product list state
+  const [products, setProducts] = useState<any[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Fetch uploaded images on component mount and after uploads
   useEffect(() => {
     if (authenticated) {
       fetchUploadedImages();
+      fetchProducts();
     }
-  }, [authenticated]);
+  }, [authenticated, currentPage]);
 
   const fetchUploadedImages = async () => {
     try {
@@ -574,6 +581,22 @@ export default function AdminDashboard() {
       }
     } catch (error) {
       console.error('Error fetching images:', error);
+    }
+  };
+
+  const fetchProducts = async () => {
+    setLoadingProducts(true);
+    try {
+      const response = await fetch(`/api/products?page=${currentPage}&limit=10`);
+      if (response.ok) {
+        const data = await response.json();
+        setProducts(data.data || []);
+        setTotalPages(data.pagination?.pages || 1);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoadingProducts(false);
     }
   };
 
@@ -633,13 +656,51 @@ export default function AdminDashboard() {
     }
 
     try {
-      // Here you would typically send the data to your API
-      // For now, we'll just log it and show success
-      console.log('Product data:', validation.data);
-      alert('Product created successfully! (Check console for data)');
+      // Create FormData for file upload
+      const submitFormData = new FormData();
       
-      // Reset form
-      setFormData(defaultProductFormValues);
+      // Add all form fields
+      submitFormData.append('title', formData.title || '');
+      submitFormData.append('price', (formData.price || 0).toString());
+      submitFormData.append('category', formData.category || '');
+      submitFormData.append('brand', formData.brand || '');
+      submitFormData.append('dressStyle', formData.dressStyle || '');
+      submitFormData.append('rating', (formData.rating || 0).toString());
+      submitFormData.append('discountAmount', (formData.discountAmount || 0).toString());
+      submitFormData.append('discountPercentage', (formData.discountPercentage || 0).toString());
+      submitFormData.append('description', formData.description || '');
+      submitFormData.append('inStock', (formData.inStock || false).toString());
+      submitFormData.append('featured', (formData.featured || false).toString());
+      submitFormData.append('colors', JSON.stringify(formData.colors || []));
+      submitFormData.append('sizes', JSON.stringify(formData.sizes || []));
+      
+      // Add files
+      if (formData.mainImage) {
+        submitFormData.append('mainImage', formData.mainImage);
+      }
+      if (formData.galleryImages && formData.galleryImages.length > 0) {
+        formData.galleryImages.forEach(file => {
+          submitFormData.append('galleryImages', file);
+        });
+      }
+
+      // Submit to API
+      const response = await fetch('/api/products/create', {
+        method: 'POST',
+        body: submitFormData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        alert('Product created successfully!');
+        // Reset form
+        setFormData(defaultProductFormValues);
+        // Refresh product list
+        fetchProducts();
+      } else {
+        setFormErrors([{ field: 'general', message: result.error || 'Failed to create product' }]);
+      }
     } catch (error) {
       console.error('Error creating product:', error);
       setFormErrors([{ field: 'general', message: 'Failed to create product' }]);
@@ -715,6 +776,33 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteProduct = async (productId: string) => {
+    if (confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+      try {
+        const response = await fetch(`/api/products/${productId}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          alert('Product deleted successfully!');
+          // Refresh product list
+          fetchProducts();
+        } else {
+          const result = await response.json();
+          alert(result.error || 'Failed to delete product');
+        }
+      } catch (error) {
+        console.error('Delete error:', error);
+        alert('Error deleting product');
+      }
+    }
+  };
+
+  const handleEditProduct = (product: any) => {
+    // For now, just show an alert. You can implement a full edit modal later
+    alert(`Edit functionality for "${product.title}" will be implemented in the next update.`);
+  };
+
   if (!authenticated) {
     return (
       <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "20px" }}>
@@ -782,6 +870,20 @@ export default function AdminDashboard() {
               }}
             >
               Simple Upload
+            </button>
+            <button 
+              onClick={() => setActiveTab('productList')}
+              style={{ 
+                padding: "10px 20px", 
+                background: activeTab === 'productList' ? "#007bff" : "#6c757d", 
+                color: "#fff", 
+                border: "none", 
+                borderRadius: 4, 
+                cursor: "pointer",
+                fontWeight: "500"
+              }}
+            >
+              Product List
             </button>
           </div>
         </div>
@@ -924,6 +1026,187 @@ export default function AdminDashboard() {
                 </div>
               )}
             </div>
+          </div>
+        )}
+
+        {activeTab === 'productList' && (
+          <div style={{ backgroundColor: "#fff", padding: "30px", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
+            <h2 style={{ color: "#333", marginBottom: "20px" }}>Product List ({products.length} products)</h2>
+            
+            {loadingProducts ? (
+              <div style={{ textAlign: "center", padding: "40px" }}>
+                <p>Loading products...</p>
+              </div>
+            ) : products.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "40px", color: "#666" }}>
+                <p>No products found. Create your first product using the Product Form tab.</p>
+              </div>
+            ) : (
+              <>
+                <div style={{ 
+                  display: "grid", 
+                  gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", 
+                  gap: "20px",
+                  marginBottom: "30px"
+                }}>
+                  {products.map((product) => (
+                    <div key={product._id} style={{ 
+                      border: "1px solid #ddd", 
+                      borderRadius: "8px", 
+                      padding: "20px",
+                      backgroundColor: "#fafafa"
+                    }}>
+                      <div style={{ display: "flex", gap: "15px" }}>
+                        <img 
+                          src={product.srcUrl} 
+                          alt={product.title}
+                          style={{ 
+                            width: "80px", 
+                            height: "80px", 
+                            objectFit: "cover", 
+                            borderRadius: "4px",
+                            border: "1px solid #ddd"
+                          }}
+                        />
+                        <div style={{ flex: 1 }}>
+                          <h3 style={{ margin: "0 0 8px 0", fontSize: "16px", color: "#333" }}>
+                            {product.title}
+                          </h3>
+                          <p style={{ margin: "0 0 4px 0", fontSize: "14px", color: "#666" }}>
+                            <strong>Brand:</strong> {product.brand}
+                          </p>
+                          <p style={{ margin: "0 0 4px 0", fontSize: "14px", color: "#666" }}>
+                            <strong>Category:</strong> {product.category}
+                          </p>
+                          <p style={{ margin: "0 0 4px 0", fontSize: "14px", color: "#666" }}>
+                            <strong>Price:</strong> ${product.price}
+                            {product.discount.percentage > 0 && (
+                              <span style={{ color: "#28a745", marginLeft: "8px" }}>
+                                ({product.discount.percentage}% off)
+                              </span>
+                            )}
+                          </p>
+                          <p style={{ margin: "0 0 4px 0", fontSize: "14px", color: "#666" }}>
+                            <strong>Rating:</strong> {product.rating}/5
+                          </p>
+                          <p style={{ margin: "0 0 8px 0", fontSize: "14px", color: "#666" }}>
+                            <strong>Colors:</strong> {product.colors.join(", ")}
+                          </p>
+                          <p style={{ margin: "0 0 8px 0", fontSize: "14px", color: "#666" }}>
+                            <strong>Sizes:</strong> {product.sizes.join(", ")}
+                          </p>
+                          <div style={{ display: "flex", gap: "8px", marginTop: "10px" }}>
+                            <span style={{ 
+                              padding: "2px 8px", 
+                              borderRadius: "12px", 
+                              fontSize: "12px",
+                              backgroundColor: product.inStock ? "#d4edda" : "#f8d7da",
+                              color: product.inStock ? "#155724" : "#721c24"
+                            }}>
+                              {product.inStock ? "In Stock" : "Out of Stock"}
+                            </span>
+                            {product.featured && (
+                              <span style={{ 
+                                padding: "2px 8px", 
+                                borderRadius: "12px", 
+                                fontSize: "12px",
+                                backgroundColor: "#fff3cd",
+                                color: "#856404"
+                              }}>
+                                Featured
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ 
+                        display: "flex", 
+                        gap: "10px", 
+                        marginTop: "15px",
+                        paddingTop: "15px",
+                        borderTop: "1px solid #eee"
+                      }}>
+                        <button 
+                          onClick={() => handleDeleteProduct(product._id)}
+                          style={{ 
+                            padding: "6px 12px", 
+                            background: "#dc3545", 
+                            color: "#fff", 
+                            border: "none", 
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            fontSize: "12px"
+                          }}
+                        >
+                          Delete
+                        </button>
+                        <button 
+                          onClick={() => handleEditProduct(product)}
+                          style={{ 
+                            padding: "6px 12px", 
+                            background: "#007bff", 
+                            color: "#fff", 
+                            border: "none", 
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            fontSize: "12px"
+                          }}
+                        >
+                          Edit
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div style={{ 
+                    display: "flex", 
+                    justifyContent: "center", 
+                    gap: "10px",
+                    marginTop: "20px"
+                  }}>
+                    <button 
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                      style={{ 
+                        padding: "8px 16px", 
+                        background: currentPage === 1 ? "#6c757d" : "#007bff", 
+                        color: "#fff", 
+                        border: "none", 
+                        borderRadius: "4px",
+                        cursor: currentPage === 1 ? "not-allowed" : "pointer"
+                      }}
+                    >
+                      Previous
+                    </button>
+                    <span style={{ 
+                      padding: "8px 16px", 
+                      display: "flex", 
+                      alignItems: "center",
+                      fontSize: "14px"
+                    }}>
+                      Page {currentPage} of {totalPages}
+                    </span>
+                    <button 
+                      onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                      disabled={currentPage === totalPages}
+                      style={{ 
+                        padding: "8px 16px", 
+                        background: currentPage === totalPages ? "#6c757d" : "#007bff", 
+                        color: "#fff", 
+                        border: "none", 
+                        borderRadius: "4px",
+                        cursor: currentPage === totalPages ? "not-allowed" : "pointer"
+                      }}
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         )}
 
