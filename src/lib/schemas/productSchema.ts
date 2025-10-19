@@ -7,11 +7,11 @@ export const productFormSchema = z.object({
   
   // Category and Brand
   category: z.enum(['shoes', 'clothes', 'watches'], {
-    required_error: 'Please select a category',
+    errorMap: () => ({ message: 'Please select a category' }),
   }),
   brand: z.string().min(1, 'Brand is required').max(50, 'Brand must be less than 50 characters'),
   dressStyle: z.enum(['lifestyle', 'performance', 'outdoor', 'formal'], {
-    required_error: 'Please select a dress style',
+    errorMap: () => ({ message: 'Please select a dress style' }),
   }),
   
   // Rating
@@ -26,8 +26,8 @@ export const productFormSchema = z.object({
   sizes: z.array(z.string()).min(1, 'At least one size is required'),
   
   // Images
-  mainImage: z.instanceof(File, { message: 'Main image is required' }).optional(),
-  galleryImages: z.array(z.instanceof(File)).optional(),
+  mainImage: z.any().optional(), // File object or string URL
+  galleryImages: z.array(z.any()).optional(), // Array of File objects or string URLs
   
   // Optional fields
   description: z.string().max(500, 'Description must be less than 500 characters').optional(),
