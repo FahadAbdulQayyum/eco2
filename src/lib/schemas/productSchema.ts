@@ -6,13 +6,9 @@ export const productFormSchema = z.object({
   price: z.number().min(0, 'Price must be positive').max(10000, 'Price must be less than $10,000'),
   
   // Category and Brand
-  category: z.enum(['shoes', 'clothes', 'watches'], {
-    errorMap: () => ({ message: 'Please select a category' }),
-  }),
+  category: z.enum(['shoes', 'clothes', 'watches']),
   brand: z.string().min(1, 'Brand is required').max(50, 'Brand must be less than 50 characters'),
-  dressStyle: z.enum(['lifestyle', 'performance', 'outdoor', 'formal'], {
-    errorMap: () => ({ message: 'Please select a dress style' }),
-  }),
+  dressStyle: z.enum(['lifestyle', 'performance', 'outdoor', 'formal']),
   
   // Rating
   rating: z.number().min(0, 'Rating must be at least 0').max(5, 'Rating must be at most 5').step(0.1),
