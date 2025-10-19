@@ -8,14 +8,14 @@ import Header from "@/components/homepage/Header";
 import Reviews from "@/components/homepage/Reviews";
 import { Review } from "@/types/review.types";
 import { useState, useEffect } from "react";
-import { defaultReviewsData } from "@/lib/data/products";
+import { defaultReviewsData, dressStyleData, watchesData } from "@/lib/data/products";
 import { useProducts, Product } from "@/lib/hooks/useProducts";
 
 export default function Home() {
   const [reviews, setReviews] = useState<Review[]>(defaultReviewsData);
   const [isLoadingReviews, setIsLoadingReviews] = useState(true);
 
-  // Fetch products from MongoDB
+  // Fetch specific products from MongoDB
   const { products: newArrivals, loading: loadingNewArrivals } = useProducts({
     limit: 4,
     sortBy: 'createdAt',
@@ -28,19 +28,10 @@ export default function Home() {
     sortOrder: 'desc',
   });
 
-  const { products: shoesProducts, loading: loadingShoes } = useProducts({
-    category: 'shoes',
+  const { products: relatedProducts, loading: loadingRelated } = useProducts({
     limit: 4,
-  });
-
-  const { products: clothesProducts, loading: loadingClothes } = useProducts({
-    category: 'clothes',
-    limit: 4,
-  });
-
-  const { products: watchesProducts, loading: loadingWatches } = useProducts({
-    category: 'watches',
-    limit: 4,
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
   });
 
   useEffect(() => {
@@ -87,13 +78,13 @@ export default function Home() {
           />
         </div>
         <div className="mb-[50px] sm:mb-20">
-          <ShoesStyle products={shoesProducts} loading={loadingShoes} />
+          <ShoesStyle />
         </div>
         <div className="mb-[50px] sm:mb-20">
-          <DressStyle products={clothesProducts} loading={loadingClothes} />
+          <DressStyle />
         </div>
         <div className="mb-[50px] sm:mb-20">
-          <WatchStyle products={watchesProducts} loading={loadingWatches} />
+          <WatchStyle />
         </div>
         <Reviews data={reviews} />
       </main>
