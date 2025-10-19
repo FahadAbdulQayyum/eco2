@@ -100,7 +100,7 @@ export async function DELETE(
     if (product.cloudinaryPublicIds && product.cloudinaryPublicIds.length > 0) {
       try {
         await Promise.all(
-          product.cloudinaryPublicIds.map(publicId => 
+          product.cloudinaryPublicIds.map((publicId: string) => 
             deleteFromCloudinary(publicId)
           )
         );
