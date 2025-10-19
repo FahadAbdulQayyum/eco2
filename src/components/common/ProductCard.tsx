@@ -2,10 +2,11 @@ import React from "react";
 import Rating from "../ui/Rating";
 import Image from "next/image";
 import Link from "next/link";
-import { Product } from "@/types/product.types";
+import { Product as OriginalProduct } from "@/types/product.types";
+import { Product as MongoDBProduct } from "@/lib/hooks/useProducts";
 
 type ProductCardProps = {
-  data: Product;
+  data: OriginalProduct | MongoDBProduct;
 };
 
 const ProductCard = ({ data }: ProductCardProps) => {

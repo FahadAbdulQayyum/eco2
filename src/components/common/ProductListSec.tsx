@@ -9,15 +9,17 @@ import {
 } from "@/components/ui/carousel";
 import ProductCard from "./ProductCard";
 import { Product } from "@/types/product.types";
+import { Product as MongoDBProduct } from "@/lib/hooks/useProducts";
 import Link from "next/link";
 
 type ProductListSecProps = {
   title: string;
-  data: Product[];
+  data: Product[] | MongoDBProduct[];
   viewAllLink?: string;
+  loading?: boolean;
 };
 
-const ProductListSec = ({ title, data, viewAllLink }: ProductListSecProps) => {
+const ProductListSec = ({ title, data, viewAllLink, loading = false }: ProductListSecProps) => {
   return (
     <section className="max-w-frame mx-auto text-center">
       <motion.h2
@@ -38,23 +40,34 @@ const ProductListSec = ({ title, data, viewAllLink }: ProductListSecProps) => {
         viewport={{ once: true }}
         transition={{ delay: 0.6, duration: 0.6 }}
       >
-        <Carousel
-          opts={{
-            align: "start",
-          }}
-          className="w-full mb-6 md:mb-9"
-        >
-          <CarouselContent className="mx-4 xl:mx-0 space-x-4 sm:space-x-5">
-            {data.map((product) => (
-              <CarouselItem
-                key={product.id}
-                className="w-full max-w-[198px] sm:max-w-[295px] pl-0"
-              >
-                <ProductCard data={product} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+        {loading ? (
+          <div className="w-full mb-6 md:mb-9 flex justify-center items-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+            <span className="ml-2 text-gray-600">Loading products...</span>
+          </div>
+        ) : data.length > 0 ? (
+          <Carousel
+            opts={{
+              align: "start",
+            }}
+            className="w-full mb-6 md:mb-9"
+          >
+            <CarouselContent className="mx-4 xl:mx-0 space-x-4 sm:space-x-5">
+              {data.map((product) => (
+                <CarouselItem
+                  key={product.id}
+                  className="w-full max-w-[198px] sm:max-w-[295px] pl-0"
+                >
+                  <ProductCard data={product} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        ) : (
+          <div className="w-full mb-6 md:mb-9 flex justify-center items-center py-8">
+            <span className="text-gray-600">No products available</span>
+          </div>
+        )}
         {viewAllLink && (
           <div className="w-full px-4 sm:px-0 text-center">
             <Link
