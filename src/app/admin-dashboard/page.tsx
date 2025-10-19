@@ -650,7 +650,7 @@ export default function AdminDashboard() {
     // Validate form data
     const validation = validateProductForm(formData);
     if (!validation.success) {
-      setFormErrors(validation.errors);
+      setFormErrors(validation.errors || []);
       setIsSubmitting(false);
       return;
     }

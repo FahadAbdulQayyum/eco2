@@ -41,7 +41,7 @@ export const validateProductForm = (data: any) => {
     if (error instanceof z.ZodError) {
       return { 
         success: false, 
-        errors: error.errors.map(err => ({
+        errors: error.issues.map(err => ({
           field: err.path.join('.'),
           message: err.message
         }))
