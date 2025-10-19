@@ -1,4 +1,4 @@
-import { newArrivalsData, relatedProductData, topSellingData } from "@/lib/data/products";
+import { newArrivalsData, relatedProductData, topSellingData, dressStyleData } from "@/lib/data/products";
 import ProductListSec from "@/components/common/ProductListSec";
 import BreadcrumbProduct from "@/components/product-page/BreadcrumbProduct";
 import Header from "@/components/product-page/Header";
@@ -10,6 +10,7 @@ const data: Product[] = [
   ...newArrivalsData,
   ...topSellingData,
   ...relatedProductData,
+  ...dressStyleData,
 ];
 
 export default function ProductPage({
