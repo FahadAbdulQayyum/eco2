@@ -871,21 +871,21 @@ export default function AdminDashboard() {
             >
               Simple Upload
             </button>
-            <button 
+                  <button 
               onClick={() => setActiveTab('productList')}
-              style={{ 
+                    style={{ 
                 padding: "10px 20px", 
                 background: activeTab === 'productList' ? "#007bff" : "#6c757d", 
-                color: "#fff", 
-                border: "none", 
-                borderRadius: 4, 
+                      color: "#fff", 
+                      border: "none", 
+                      borderRadius: 4, 
                 cursor: "pointer",
                 fontWeight: "500"
-              }}
-            >
+                    }}
+                  >
               Product List
-            </button>
-          </div>
+                  </button>
+                </div>
         </div>
 
         {/* Tab Content */}
