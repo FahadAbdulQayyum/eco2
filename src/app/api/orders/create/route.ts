@@ -9,6 +9,11 @@ export async function POST(req: Request) {
     const mongoose = await connectDB();
     const db = mongoose.connection.db;
 
+    if (!db) {
+      console.error("Database instance is not available on mongoose.connection.db");
+      return NextResponse.json({ error: "Database connection not available" }, { status: 500 });
+    }
+
     const doc = {
       ...body,
     };
