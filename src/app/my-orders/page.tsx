@@ -14,7 +14,7 @@ export default function MyOrdersPage() {
       <main className="max-w-frame mx-auto px-4 xl:px-0 py-10">
         <h2 className="text-2xl font-bold mb-6">My Orders</h2>
         <div className="text-gray-500 mb-4">You must be logged in to view your orders.</div>
-        <Link href="/signin" className="text-primary hover:underline font-medium">Sign in</Link>
+        <span className="text-primary font-medium">Sign in (disabled)</span>
       </main>
     );
   }

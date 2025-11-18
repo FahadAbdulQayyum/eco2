@@ -542,7 +542,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
 export default function AdminDashboard() {
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
-  const [activeTab, setActiveTab] = useState<'upload' | 'gallery' | 'products' | 'productList'>('upload');
+  const [activeTab, setActiveTab] = useState<'upload' | 'gallery' | 'products' | 'productList' | 'orders'>('upload');
   
   // Product form state
   const [formData, setFormData] = useState<Partial<ProductFormData>>(defaultProductFormValues);
@@ -564,13 +564,21 @@ export default function AdminDashboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  // Orders state
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+  const [ordersError, setOrdersError] = useState("");
+
   // Fetch uploaded images on component mount and after uploads
   useEffect(() => {
     if (authenticated) {
       fetchUploadedImages();
       fetchProducts();
+      if (activeTab === 'orders') {
+        fetchOrders();
+      }
     }
-  }, [authenticated, currentPage]);
+  }, [authenticated, currentPage, activeTab]);
 
   const fetchUploadedImages = async () => {
     try {
@@ -597,6 +605,25 @@ export default function AdminDashboard() {
       console.error('Error fetching products:', error);
     } finally {
       setLoadingProducts(false);
+    }
+  };
+
+  const fetchOrders = async () => {
+    setLoadingOrders(true);
+    setOrdersError("");
+    try {
+      const response = await fetch(`/api/orders`);
+      if (response.ok) {
+        const data = await response.json();
+        setOrders(data.orders || []);
+      } else {
+        setOrdersError("Failed to fetch orders");
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      setOrdersError("Error fetching orders");
+    } finally {
+      setLoadingOrders(false);
     }
   };
 
@@ -844,10 +871,10 @@ export default function AdminDashboard() {
               Product Form
             </button>
             <button 
-              onClick={() => setActiveTab('gallery')}
+              onClick={() => setActiveTab('orders')}
               style={{ 
                 padding: "10px 20px", 
-                background: activeTab === 'gallery' ? "#007bff" : "#6c757d", 
+                background: activeTab === 'orders' ? "#007bff" : "#6c757d", 
                 color: "#fff", 
                 border: "none", 
                 borderRadius: 4, 
@@ -855,21 +882,7 @@ export default function AdminDashboard() {
                 fontWeight: "500"
               }}
             >
-              Image Gallery
-            </button>
-            <button 
-              onClick={() => setActiveTab('products')}
-              style={{ 
-                padding: "10px 20px", 
-                background: activeTab === 'products' ? "#007bff" : "#6c757d", 
-                color: "#fff", 
-                border: "none", 
-                borderRadius: 4, 
-                cursor: "pointer",
-                fontWeight: "500"
-              }}
-            >
-              Simple Upload
+              Orders
             </button>
                   <button 
               onClick={() => setActiveTab('productList')}
@@ -1206,6 +1219,74 @@ export default function AdminDashboard() {
                   </div>
                 )}
               </>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'orders' && (
+          <div style={{ backgroundColor: "#fff", padding: "30px", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
+            <h2 style={{ color: "#333", marginBottom: "20px" }}>Orders ({orders.length} orders)</h2>
+            
+            {loadingOrders ? (
+              <div style={{ textAlign: "center", padding: "40px" }}>
+                <p>Loading orders...</p>
+              </div>
+            ) : ordersError ? (
+              <div style={{ textAlign: "center", padding: "40px", color: "#dc3545" }}>
+                <p>{ordersError}</p>
+              </div>
+            ) : orders.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "40px", color: "#666" }}>
+                <p>No orders found.</p>
+              </div>
+            ) : (
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ 
+                  width: "100%", 
+                  borderCollapse: "collapse",
+                  fontSize: "14px"
+                }}>
+                  <thead>
+                    <tr style={{ backgroundColor: "#f5f5f5", borderBottom: "2px solid #ddd" }}>
+                      <th style={{ padding: "12px", textAlign: "left", fontWeight: "600" }}>Order ID</th>
+                      <th style={{ padding: "12px", textAlign: "left", fontWeight: "600" }}>Customer</th>
+                      <th style={{ padding: "12px", textAlign: "left", fontWeight: "600" }}>WhatsApp</th>
+                      <th style={{ padding: "12px", textAlign: "left", fontWeight: "600" }}>Address</th>
+                      <th style={{ padding: "12px", textAlign: "left", fontWeight: "600" }}>Total</th>
+                      <th style={{ padding: "12px", textAlign: "left", fontWeight: "600" }}>Products</th>
+                      <th style={{ padding: "12px", textAlign: "left", fontWeight: "600" }}>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map((order, idx) => (
+                      <tr key={idx} style={{ borderBottom: "1px solid #eee" }}>
+                        <td style={{ padding: "12px" }}>{order.id?.substring(0, 8) || "N/A"}</td>
+                        <td style={{ padding: "12px" }}>{order.customerName || "Guest"}</td>
+                        <td style={{ padding: "12px" }}>{order.whatsapp || "N/A"}</td>
+                        <td style={{ padding: "12px", maxWidth: "200px", wordBreak: "break-word" }}>{order.address || "N/A"}</td>
+                        <td style={{ padding: "12px", fontWeight: "600" }}>QAR {order.total}</td>
+                        <td style={{ padding: "12px" }}>
+                          <details style={{ cursor: "pointer" }}>
+                            <summary style={{ fontWeight: "500" }}>
+                              {order.products?.length || 0} item(s)
+                            </summary>
+                            <div style={{ marginTop: "8px", paddingTop: "8px", borderTop: "1px solid #eee" }}>
+                              {order.products?.map((prod: any, pidx: number) => (
+                                <div key={pidx} style={{ marginTop: "4px", fontSize: "12px" }}>
+                                  {prod.name} × {prod.quantity}
+                                </div>
+                              ))}
+                            </div>
+                          </details>
+                        </td>
+                        <td style={{ padding: "12px" }}>
+                          {new Date(order.createdAt).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         )}

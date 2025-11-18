@@ -71,7 +71,7 @@ export default function SignUpPage() {
         </form>
         <div className="text-center mt-6 text-sm">
           Already have an account?{' '}
-          <Link href="/signin" className="text-primary hover:underline font-medium">Sign in</Link>
+          <span className="text-primary font-medium">Sign in (disabled)</span>
         </div>
         
         {/* Info about existing accounts */}

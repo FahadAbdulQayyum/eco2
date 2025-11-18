@@ -12,7 +12,6 @@ import { TbBasketExclamation } from "react-icons/tb";
 import React from "react";
 import { RootState } from "@/lib/store";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
-import { addOrder } from "@/lib/features/orders/ordersSlice";
 import { v4 as uuidv4 } from "uuid";
 import { cartsSlice } from "@/lib/features/carts/cartsSlice";
 import { useState } from "react";
@@ -28,45 +27,58 @@ export default function CartPage() {
   const isAuthenticated = useAppSelector((state: RootState) => state.auth.isAuthenticated);
   const currentUser = useAppSelector((state: RootState) => state.auth.currentUser);
   const [showModal, setShowModal] = useState(false);
-  const [cardInfo, setCardInfo] = useState({
-    cardNumber: "",
-    cardName: "",
-    expiry: "",
-    cvc: "",
-  });
+  const [form, setForm] = useState({ name: "", address: "", whatsapp: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleCheckout = () => {
-    if (!isAuthenticated) {
-      router.push("/signin?redirect=/cart");
-      return;
-    }
     setShowModal(true);
   };
 
-  const handleCardChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCardInfo({ ...cardInfo, [e.target.name]: e.target.value });
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleOrder = () => {
-    if (!cardInfo.cardNumber || !cardInfo.cardName || !cardInfo.expiry || !cardInfo.cvc) {
-      setError("Please fill all card fields.");
+  const handleOrder = async () => {
+    if (!form.name || !form.address || !form.whatsapp) {
+      setError("Please fill all fields.");
       return;
     }
-    if (!cart || !currentUser) return;
-    dispatch(
-      addOrder({
-        id: uuidv4(),
-        products: cart.items,
-        total: adjustedTotalPrice,
-        cardInfo,
-        createdAt: new Date().toISOString(),
-        userId: currentUser.id,
-        userName: currentUser.name,
-      })
-    );
-    dispatch(cartsSlice.actions.clearCart());
-    setShowModal(false);
+    if (!cart) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/orders/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: uuidv4(),
+          userId: currentUser?.id ?? null,
+          userName: currentUser?.name ?? form.name,
+          customerName: form.name,
+          address: form.address,
+          whatsapp: form.whatsapp,
+          products: cart.items,
+          total: adjustedTotalPrice,
+          createdAt: new Date().toISOString(),
+        }),
+      });
+
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(txt || "Failed to create order");
+      }
+
+      dispatch(cartsSlice.actions.clearCart());
+      setShowModal(false);
+      alert("Order submitted — we'll contact you on WhatsApp.");
+    } catch (err: any) {
+      setError(err?.message || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -172,46 +184,41 @@ export default function CartPage() {
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Enter Card Info</h2>
+            <h2 className="text-xl font-bold mb-4">Checkout — Shipping Info</h2>
             <input
               type="text"
-              name="cardNumber"
-              placeholder="Card Number"
+              name="name"
+              placeholder="Full Name"
               className="w-full mb-2 p-2 border rounded"
-              value={cardInfo.cardNumber}
-              onChange={handleCardChange}
+              value={form.name}
+              onChange={handleFormChange}
+            />
+            <textarea
+              name="address"
+              placeholder="Delivery address"
+              className="w-full mb-2 p-2 border rounded"
+              value={form.address}
+              onChange={handleFormChange}
             />
             <input
               type="text"
-              name="cardName"
-              placeholder="Name on Card"
+              name="whatsapp"
+              placeholder="WhatsApp number (with country code)"
               className="w-full mb-2 p-2 border rounded"
-              value={cardInfo.cardName}
-              onChange={handleCardChange}
-            />
-            <input
-              type="text"
-              name="expiry"
-              placeholder="MM/YY"
-              className="w-full mb-2 p-2 border rounded"
-              value={cardInfo.expiry}
-              onChange={handleCardChange}
-            />
-            <input
-              type="text"
-              name="cvc"
-              placeholder="CVC"
-              className="w-full mb-2 p-2 border rounded"
-              value={cardInfo.cvc}
-              onChange={handleCardChange}
+              value={form.whatsapp}
+              onChange={handleFormChange}
             />
             {error && <div className="text-red-500 mb-2">{error}</div>}
             <div className="flex justify-end space-x-2">
               <button className="px-4 py-2 bg-gray-300 rounded" onClick={() => setShowModal(false)}>
                 Cancel
               </button>
-              <button className="px-4 py-2 bg-black text-white rounded" onClick={handleOrder}>
-                Confirm Order
+              <button
+                className="px-4 py-2 bg-black text-white rounded"
+                onClick={handleOrder}
+                disabled={loading}
+              >
+                {loading ? "Submitting..." : "Submit Order"}
               </button>
             </div>
           </div>

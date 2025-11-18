@@ -30,14 +30,14 @@ export default function RootLayout({
       <body className={satoshi.className}>
         <ToastProvider>
           <HolyLoader color="#868686" />
-          <TopBanner />
+          {/* <TopBanner /> */}
           <Providers>
             <TopNavbar />
-            <nav className="w-full bg-gray-100 py-2 px-4 flex justify-end space-x-4">
+            {/* <nav className="w-full bg-gray-100 py-2 px-4 flex justify-end space-x-4">
               <Link href="/my-orders" className="text-sm font-medium hover:underline">
                 My Orders
               </Link>
-            </nav>
+            </nav> */}
             {children}
           </Providers>
           <Footer />
